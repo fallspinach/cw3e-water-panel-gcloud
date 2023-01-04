@@ -1,0 +1,30 @@
+/*.DateInput, .DateInput_1, .DateInput_input, .DateInput_input_1, .SingleDatePickerInput {
+    font-size: medium;
+    border:    1px;
+    border-radius: 4px 0 0 4px;
+    border-style: solid;
+    border-color: #ccc;
+    padding: 0px;
+}*/
+
+.DateInput, .DateInput_1 {
+    font-size: small;
+    border-radius: 4px 0 0 4px !important;
+    width: 100px;
+}
+
+.DateInput_input, .DateInput_input_1 {
+    font-size: medium;
+    font-weight: bold;
+    Height: 34px !important;
+    Width: 100% !important;
+    border-radius: inherit;
+    padding: 5px;
+}
+
+.SingleDatePickerInput, .SingleDatePickerInput__withBorder {
+    font-size: small;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc !important;
+    padding: 0px;
+}
