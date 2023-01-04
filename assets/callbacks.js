@@ -130,6 +130,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             
             return date_new.toISOString().split('T')[0];
             
+        },
+        
+        open_popup: function(n_clicks) {
+            if (n_clicks) {
+                return true;
+            }
         }
         
     }
