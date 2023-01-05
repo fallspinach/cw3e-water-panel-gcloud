@@ -75,8 +75,18 @@ map_region = dl.Map([maptiles[1], locator, dl.LayersControl(layers_region)],
                     center=[38.2, -119], zoom=6,
                     style={'width': '100%', 'height': '100%', 'min-height': '650px', 'min-width': '700px', 'margin': '0px', 'display': 'block'})
 
+# B-120 basin elevation bands
+#elev_scale = ['green', 'lightgreen', 'lightyellow', 'yellow', 'darkyellow', 'brown', 'darkbrown', 'darkred', 'darkgray', 'gray', 'lightgray', 'white']
+elev_scale = ['magenta', 'red', 'orangered', 'orange', 'yellow', 'yellowgreen', 'green', 'cyan', 'turquoise', 'blue', 'indigo', 'purple', 'violet']
+elev_classes = [-1, 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999]
+elev_style = dict(weight=0, opacity=1, color='darkblue', fillOpacity=0.3)
+elev_bands = dl.GeoJSON(url='assets/elev_bands_FTO.pbf', format='geobuf', id='elev-bands', zoomToBounds=True,
+                        options=dict(style=ns('b120_style')),
+                        hoverStyle=arrow_function(dict(weight=1, color='black', dashArray='', fillOpacity=0.7)),
+                        hideout=dict(colorscale=elev_scale, classes=elev_classes, style=elev_style, colorProp='low_range'))
+                        
 # basin zoom-in map on the right
-map_basin  = dl.Map([maptiles[2]],
+map_basin  = dl.Map([maptiles[2], elev_bands],
                     center=[40, -121], zoom=8, zoomControl=False,
                     style={'width': '100%', 'height': '100%', 'min-height': '400px', 'min-width': '500px', 'margin': '0px', 'display': 'block'})
 
@@ -170,6 +180,7 @@ timestep_tab = html.Div([button_backward_month, button_backward_day, button_back
 month_marks = {}
 for i in range(12):
     month_marks[i] = '%d' % (i+1)
+month_marks = {0: 'Jan', 1: 'Feb', 2: 'Mar', 3: 'Apr', 4: 'May', 5: 'Jun', 6: 'Jul', 7: 'Aug', 8: 'Sep', 9: 'Oct', 10: 'Nov', 11: 'Dec'}
     
 slider_month =  html.Div(
     dcc.Slider(
