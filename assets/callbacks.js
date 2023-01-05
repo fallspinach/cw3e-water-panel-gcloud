@@ -73,7 +73,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         },
         
         update_cbar_visibility: function(checked) {
-            if (checked>0) {
+            if (checked==false) {
                 return {'display': 'none'};
             }
             else {

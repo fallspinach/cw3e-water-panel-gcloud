@@ -82,7 +82,7 @@ elev_classes = [-1, 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 1
 elev_style = dict(weight=0, opacity=1, color='darkblue', fillOpacity=0.3)
 elev_bands = dl.GeoJSON(url='assets/elev_bands_FTO.pbf', format='geobuf', id='elev-bands', zoomToBounds=True,
                         options=dict(style=ns('b120_style')),
-                        hoverStyle=arrow_function(dict(weight=1, color='black', dashArray='', fillOpacity=0.7)),
+                        hoverStyle=arrow_function(dict(weight=1, color='black', dashArray='', fillOpacity=0.5)),
                         hideout=dict(colorscale=elev_scale, classes=elev_classes, style=elev_style, colorProp='low_range'))
                         
 # basin zoom-in map on the right
@@ -95,7 +95,7 @@ map_basin  = dl.Map([maptiles[2], elev_bands],
 tab_style  = {'min-height': '162px', 'background-color': 'white', 'font-size': 'small'}
 item_style = {'margin': '5px 10px 2px 10px'}
 met_vars = [{'label': v['label'], 'value': v['name']} for v in data_vars if v['cat']=='met']
-met_tab = html.Div(dcc.RadioItems(options=met_vars, value=None, id='met-vars', inputStyle=item_style), style=tab_style)
+met_tab = html.Div(dcc.RadioItems(options=met_vars, value=met_vars[0]['value'], id='met-vars', inputStyle=item_style), style=tab_style)
 
 # hydro variable tab
 hydro_vars = [{'label': v['label'], 'value': v['name']} for v in data_vars if v['cat']=='hydro']

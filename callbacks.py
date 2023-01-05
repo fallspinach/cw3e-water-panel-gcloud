@@ -52,6 +52,15 @@ app.clientside_callback(
     Input(component_id='hydro-vars', component_property='value')
 )
 
+app.clientside_callback(
+    ClientsideFunction(
+        namespace='clientside',
+        function_name='update_cbar_visibility'
+    ),
+    Output('data-cbar', 'style'),
+    Input(component_id='data-map-ol', component_property='checked')
+)
+
 # callback to update datepicker and slider on button clicks
 app.clientside_callback(
     ClientsideFunction(
