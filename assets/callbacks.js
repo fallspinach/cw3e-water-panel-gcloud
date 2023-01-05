@@ -132,10 +132,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             
         },
         
-        open_popup: function(n_clicks) {
-            if (n_clicks) {
-                return true;
-            }
+        // update basin for elev bands
+        update_basin_elev: function(basin) {
+            var new_url = 'assets/elev_bands_' + basin['properties']['Station'] + '.pbf';
+            return new_url;
         }
         
     }
