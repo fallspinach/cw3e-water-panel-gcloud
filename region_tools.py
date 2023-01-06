@@ -75,21 +75,6 @@ map_region = dl.Map([maptiles[1], locator, dl.LayersControl(layers_region)],
                     center=[38.2, -119], zoom=6,
                     style={'width': '100%', 'height': '100%', 'min-height': '650px', 'min-width': '700px', 'margin': '0px', 'display': 'block'})
 
-# B-120 basin elevation bands
-#elev_scale = ['green', 'lightgreen', 'lightyellow', 'yellow', 'darkyellow', 'brown', 'darkbrown', 'darkred', 'darkgray', 'gray', 'lightgray', 'white']
-elev_scale = ['magenta', 'red', 'orangered', 'orange', 'yellow', 'yellowgreen', 'green', 'cyan', 'turquoise', 'blue', 'indigo', 'purple', 'violet']
-elev_classes = [-1, 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999, 10999]
-elev_style = dict(weight=0, opacity=1, color='darkblue', fillOpacity=0.3)
-elev_bands = dl.GeoJSON(url='assets/elev_bands_FTO.pbf', format='geobuf', id='elev-bands', zoomToBounds=True,
-                        options=dict(style=ns('b120_style')),
-                        hoverStyle=arrow_function(dict(weight=1, color='black', dashArray='', fillOpacity=0.5)),
-                        hideout=dict(colorscale=elev_scale, classes=elev_classes, style=elev_style, colorProp='low_range'))
-                        
-# basin zoom-in map on the right
-map_basin  = dl.Map([maptiles[2], elev_bands],
-                    center=[40, -121], zoom=8, zoomControl=False,
-                    style={'width': '100%', 'height': '100%', 'min-height': '400px', 'min-width': '500px', 'margin': '0px', 'display': 'block'})
-
 
 # met variable tab
 tab_style  = {'min-height': '162px', 'background-color': 'white', 'font-size': 'small'}
@@ -111,7 +96,8 @@ basin_tab  = html.Div(dcc.RadioItems(options=basin_vars, value=basin_vars[0]['va
 
 # tabs for map layer selection
 tabtitle_style          = {'padding': '2px', 'height': '28px', 'font-size': 'small'}
-tabtitle_selected_style = {'padding': '2px', 'height': '28px', 'font-size': 'small', 'font-weight': 'bold'}
+tabtitle_selected_style = tabtitle_style.copy()
+tabtitle_selected_style.update ({'font-weight': 'bold'})
 
 control_data_sel = html.Div(dcc.Tabs([
     dcc.Tab(met_tab,   label='Meteorology', value='met',   style=tabtitle_style, selected_style=tabtitle_selected_style),

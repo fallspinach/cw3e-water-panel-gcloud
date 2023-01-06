@@ -1,5 +1,5 @@
 from main import app
-from plots import *
+from site_tools import *
 
 from dash.dependencies import ClientsideFunction, Input, Output, State
 
