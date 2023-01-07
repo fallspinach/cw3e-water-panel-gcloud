@@ -1,5 +1,6 @@
 from main import app
-from site_tools import *
+from site_tools import draw_reana, draw_mofor, draw_table, draw_table_all, all_stations, fnf_stations
+from basin_tools import draw_precip_by_elev
 
 from dash.dependencies import ClientsideFunction, Input, Output, State
 
@@ -99,7 +100,6 @@ def update_flows(fcst_point, n_clicks):
     else:
         table_fcst = draw_table_all()
     
-    #return [fig_reana, fig_mofor, [table_fcst, table_note]]
     return [fig_reana, fig_mofor, table_fcst, True, stain]
 
 # callback to update basin tools
@@ -111,5 +111,19 @@ app.clientside_callback(
     Output('elev-bands', 'url'),
     Input('b120-watersheds', 'click_feature')
 )
+
+# create/update precip by elev graph in basin tools
+@app.callback(Output(component_id='graph-precip-by-elev', component_property='figure'),
+              Input('b120-watersheds', 'click_feature'))
+def update_precip_by_elev(basin):
+    if basin==None:
+        staid = 'FTO'
+    else:
+        staid = basin['properties']['Station']
+
+    fig_precip_by_elev = draw_precip_by_elev(staid)
+    
+    return fig_precip_by_elev
+
 
 

@@ -35,7 +35,7 @@ def draw_reana(staid):
         fig_reana = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'})
     else:
         fig_reana = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (kaf/mon)'})
-    fig_reana.update_layout(margin=dict(l=15, r=15, t=15, b=5))
+    fig_reana.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''))
     return fig_reana
     
 # flow monitor/forecast figure
@@ -49,7 +49,7 @@ def draw_mofor(staid):
         fig_mofor = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'}, color_discrete_map=linecolors, markers=True)
     else:
         fig_mofor = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (kaf/mon)'})
-    fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5))
+    fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''))
     return fig_mofor
     
 # ancillary data figure
@@ -58,6 +58,7 @@ def draw_ancil(staid):
         fig_ancil = px.line(x=[2018, 2023], y=[50, 50], labels={'x': 'Time', 'y': 'Percentile'})
     else:
         fig_ancil = px.line(x=[2018, 2023], y=[50, 50], labels={'x': 'Data not available.', 'y': 'Percentile'})
+    fig_ancil.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee')
     return fig_ancil
 
 table_note = html.Div('  [Note] 50%, 90%, 10%: exceedance levels within the forecast ensemble. AVG: month of year average during 1979-2020. %AVG: percentage of AVG. KAF: kilo-acre-feet.', id='table-note', style={'font-size': 'small'})
