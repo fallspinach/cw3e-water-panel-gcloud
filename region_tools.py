@@ -39,13 +39,13 @@ maptiles = [
 ]
 
 # B-120 forecast points
-b120_points = dl.GeoJSON(url='assets/fnf_points_proj_tooltip.pbf', format='geobuf', id='b120-points',
+b120_points = dl.GeoJSON(url='assets/fnf_points_proj_tooltip_24.pbf', format='geobuf', id='b120-points',
                          options=dict(pointToLayer=ns('b120_ptl')), cluster=True, superClusterOptions=dict(radius=5),
                          hoverStyle=arrow_function(dict(weight=5, color='red', fillColor='red', dashArray='')),
                          hideout=dict(circleOptions=dict(fillOpacity=1, color='red', weight=2, radius=5), colorscale=['cyan'], colorProp='POINT_Y', min=0, max=100))
 # B-120 watersheds
 watershed_style = dict(weight=2, opacity=1, color='darkblue', fillOpacity=0)
-b120_watersheds = dl.GeoJSON(url='assets/fnf_watershed_proj_tooltip.pbf', format='geobuf', id='b120-watersheds',
+b120_watersheds = dl.GeoJSON(url='assets/fnf_watershed_proj_tooltip_24.pbf', format='geobuf', id='b120-watersheds',
                              options=dict(style=ns('b120_style')),
                              hoverStyle=arrow_function(dict(weight=4, color='brown', dashArray='', fillOpacity=0)),
                              hideout=dict(colorscale=['darkblue'], classes=[0], style=watershed_style, colorProp='Area_SqMi'))

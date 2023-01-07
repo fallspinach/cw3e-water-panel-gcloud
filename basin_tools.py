@@ -34,12 +34,13 @@ def draw_precip_by_elev(staid):
         fcsv = 'data/climatology/precip_by_elev/%s.csv' % (staid)
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date')
         linecolors = {'%d-%d' % (i*1000, i*1000+999): elev_scale[i] for i in range(16)}
-        fig_precip_by_elev = px.line(df, labels={'Date': 'Date (ignore the year number)', 'value': 'Precipitation Depth (mm)'}, color_discrete_map=linecolors, markers=False)
+        fig_precip_by_elev = px.line(df, labels={'Date': 'Date', 'value': 'Precipitation Depth (mm)'}, color_discrete_map=linecolors, markers=False)
     else:
         fig_precip_by_elev = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Precipitation Depth (mm)'})
-    fig_precip_by_elev.update_layout(title='Historical Mean Precip until July 31, %s: %s' % (staid, fnf_id_names[staid]),
-                                     margin=dict(l=15, r=15, t=35, b=5), plot_bgcolor='#eeeeee',
-                                     legend=dict(yanchor='top', y=0.99, xanchor='right', x=0.99, title='Elev bands'))
+    fig_precip_by_elev.update_layout(title='Historical Mean Precip until Jul 31, %s: %s' % (staid, fnf_id_names[staid]),
+                                     margin=dict(l=15, r=15, t=35, b=5), plot_bgcolor='#eeeeee', title_font_size=15,
+                                     legend=dict(yanchor='top', y=0.99, xanchor='right', x=0.99, title='Elev bands (ft)'))
+    fig_precip_by_elev.update_xaxes(dtick='M1', tickformat='%b %d')
     return fig_precip_by_elev
 
 fig_precip_by_elev = draw_precip_by_elev('FTO')
