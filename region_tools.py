@@ -87,11 +87,11 @@ hydro_vars = [{'label': v['label'], 'value': v['name']} for v in data_vars if v[
 hydro_tab = html.Div(dcc.RadioItems(options=hydro_vars, value=hydro_vars[data_var_selected]['value'], id='hydro-vars', inputStyle=item_style), style=tab_style)
 
 # site tab
-site_vars = [{'label': s, 'value': s} for s in ['Bulletin 120', 'USGS', 'CW3E']]
+site_vars = [{'label': s, 'value': s} for s in ['Bulletin 120', 'DWR (snow)', 'DWR (hydro)', 'CNRFC', 'CW3E (met)', 'CW3E (hydro)', 'CDEC', 'SNOTEL', 'USGS', 'MADIS']]
 site_tab  = html.Div(dcc.RadioItems(options=site_vars, value=site_vars[0]['value'], inputStyle=item_style), style=tab_style)
 
 # basin tab
-basin_vars = [{'label': s, 'value': s} for s in ['Bulletin 120', 'HUC-8', 'HUC-10', 'HUC-12']]
+basin_vars = [{'label': s, 'value': s} for s in ['Bulletin 120', 'CNRFC', 'FIRO', 'HUC-8', 'HUC-10', 'HUC-12']]
 basin_tab  = html.Div(dcc.RadioItems(options=basin_vars, value=basin_vars[0]['value'], inputStyle=item_style), style=tab_style)
 
 # tabs for map layer selection

@@ -35,7 +35,8 @@ def draw_reana(staid):
         fig_reana = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'})
     else:
         fig_reana = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (kaf/mon)'})
-    fig_reana.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''))
+    fig_reana.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''), hovermode='x unified')
+    fig_reana.update_traces(hovertemplate=None)
     return fig_reana
     
 # flow monitor/forecast figure
@@ -49,7 +50,8 @@ def draw_mofor(staid):
         fig_mofor = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'}, color_discrete_map=linecolors, markers=True)
     else:
         fig_mofor = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (kaf/mon)'})
-    fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''))
+    fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''), hovermode='x unified')
+    fig_mofor.update_traces(hovertemplate=None)
     return fig_mofor
     
 # ancillary data figure

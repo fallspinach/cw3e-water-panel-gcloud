@@ -37,10 +37,12 @@ def draw_precip_by_elev(staid):
         fig_precip_by_elev = px.line(df, labels={'Date': 'Date', 'value': 'Precipitation Depth (mm)'}, color_discrete_map=linecolors, markers=False)
     else:
         fig_precip_by_elev = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Precipitation Depth (mm)'})
+    fig_precip_by_elev.update_traces(hovertemplate=None)
     fig_precip_by_elev.update_layout(title='Historical Mean Precip until Jul 31, %s: %s' % (staid, fnf_id_names[staid]),
                                      margin=dict(l=15, r=15, t=35, b=5), plot_bgcolor='#eeeeee', title_font_size=15,
-                                     legend=dict(yanchor='top', y=0.99, xanchor='right', x=0.99, title='Elev bands (ft)'))
-    fig_precip_by_elev.update_xaxes(dtick='M1', tickformat='%b %d')
+                                     legend=dict(yanchor='top', y=0.99, xanchor='right', x=0.99, title='Elev bands (ft)'),
+                                     hovermode='x unified')
+    fig_precip_by_elev.update_xaxes(dtick='M1', tickformat='%b %-d')
     return fig_precip_by_elev
 
 fig_precip_by_elev = draw_precip_by_elev('FTO')
