@@ -29,9 +29,11 @@ map_basin  = dl.Map([maptiles[2], elev_bands],
                     style={'width': '100%', 'height': '100%', 'min-height': '400px', 'min-width': '500px', 'margin': '0px', 'display': 'block'})
 
 # draw precip climatology by elevation bands
+base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
+base_url = ''
 def draw_precip_by_elev(staid):
     if staid in fnf_stations:
-        fcsv = 'data/climatology/precip_by_elev/%s.csv' % (staid)
+        fcsv = base_url + 'data/climatology/precip_by_elev/%s.csv' % (staid)
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date')
         linecolors = {'%d-%d' % (i*1000, i*1000+999): elev_scale[i] for i in range(16)}
         fig_precip_by_elev = px.line(df, labels={'Date': 'Date', 'value': 'Precipitation Depth (mm)'}, color_discrete_map=linecolors, markers=False)

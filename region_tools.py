@@ -14,13 +14,15 @@ data_end   = curr_day
 
 ## data variables
 monitor_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/monitor/'
+obs_url     = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/obs/'
 data_vars = [{'label': 'SWE Percentile (daily)',    'name': 'swe_r',    'cat': 'hydro', 'url': monitor_url+'output/%Y/swe_r_%Y%m%d.png',   'cbar': monitor_url+'output/swe_r_cbar.png'},
              {'label': '2-m SM Percentile (daily)', 'name': 'smtot_r',  'cat': 'hydro', 'url': monitor_url+'output/%Y/smtot_r_%Y%m%d.png', 'cbar': monitor_url+'output/smtot_r_cbar.png'},
              {'label': 'Precipitation (daily)',     'name': 'precip',   'cat': 'met',   'url': monitor_url+'forcing/%Y/precip_%Y%m%d.png', 'cbar': monitor_url+'forcing/precip_cbar.png'},
              {'label': 'Air Temperature (daily)',   'name': 'tair2m',   'cat': 'met',   'url': monitor_url+'forcing/%Y/tair2m_%Y%m%d.png', 'cbar': monitor_url+'forcing/tair2m_cbar.png'},
              {'label': 'P Percentile (monthly)',    'name': 'precip_r', 'cat': 'met',   'url': monitor_url+'forcing/%Y/precip_r_%Y%m.png', 'cbar': monitor_url+'forcing/precip_r_cbar.png'},
-             {'label': 'T Percentile (monthly)',    'name': 'tair2m_r', 'cat': 'met',   'url': monitor_url+'forcing/%Y/atir2m_r_%Y%m.png', 'cbar': monitor_url+'forcing/tair2m_r_cbar.png'}]
-
+             {'label': 'T Percentile (monthly)',    'name': 'tair2m_r', 'cat': 'met',   'url': monitor_url+'forcing/%Y/atir2m_r_%Y%m.png', 'cbar': monitor_url+'forcing/tair2m_r_cbar.png'},
+             {'label': 'MODIS Snow Cover',          'name': 'modis_sca','cat': 'hydro', 'url': obs_url+'modis/%Y/modis_sca_%Y%m%d.png',    'cbar': obs_url+'modis/modis_sca_cbar.png'}]
+             
 # start to build maps
 ns = Namespace('dashExtensions', 'default')
 locator = dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}})

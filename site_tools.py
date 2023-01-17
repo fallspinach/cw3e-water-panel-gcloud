@@ -26,11 +26,13 @@ fnf_stations = ['TNL', 'SDT', 'MSS', 'PSH', 'SIS', 'SBB', 'FTO', 'YRS', 'AMF', '
 fnf_id_names = {key: all_stations[key] for key in fnf_stations}
 
 ## build time series figures
+base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
+base_url = ''
 
 # flow reanalysis figure
 def draw_reana(staid):
     if staid in fnf_stations:
-        fcsv = 'data/reanalysis/%s.csv' % staid
+        fcsv = base_url + 'data/reanalysis/%s.csv' % staid
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', names=['Date', 'FNF', 'Qsim', 'QsimBC'])
         fig_reana = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'})
     else:
@@ -42,7 +44,7 @@ def draw_reana(staid):
 # flow monitor/forecast figure
 def draw_mofor(staid):
     if staid in fnf_stations:
-        fcsv = 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fcsv = base_url + 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', usecols = ['Date']+['Ens%02d' % (i+1) for i in range(42)]+['Avg', 'Exc50', 'Exc90', 'Exc10'])
         df.drop(index=df.index[-1], axis=0, inplace=True)
         linecolors = {'Ens%02d' % (i+1): 'lightgray' for i in range(42)}
@@ -69,7 +71,7 @@ table_note = html.Div('  [Note] 50%, 90%, 10%: exceedance levels within the fore
 def draw_table(staid, staname):
     cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
     if staid in fnf_stations:
-        fcsv = 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fcsv = base_url + 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
         df = pd.read_csv(fcsv, parse_dates=False, usecols=cols)
         df = df[cols]
         cols.remove('Date')
@@ -107,7 +109,7 @@ def draw_table_all():
     cnt = 0
     for staid,staname in fnf_id_names.items():
         cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
-        fcsv = 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fcsv = base_url + 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
         df = pd.read_csv(fcsv, parse_dates=False, usecols=cols)
         df = df[cols]
         cols.remove('Date')
