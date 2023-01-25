@@ -3,7 +3,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
     
         // update title variable name
         update_title_var: function(cat, met_var, hydro_var) {
-            hydro_vars = {'swe_r': 'SWE Percentile (daily)', 'smtot_r': '2-m SM Percentile (daily)'};
+            hydro_vars = {'swe_r': 'SWE Percentile (daily)', 'smtot_r': '2-m SM Percentile (daily)',
+                          'modis_sca': 'MODIS Snow Cover'};
             met_vars   = {'precip': 'Precipitation (daily)', 'tair2m': 'Air Temperature (daily)', 
                           'precip_r': 'P Percentile (monthly)', 'tair2m_r': 'T Percentile (monthly)'};
             if (typeof this.varlabel == "undefined") {
@@ -34,7 +35,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         // update overlay image url
         update_img_url: function(date_value, cat, met_var, hydro_var) {
             var base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/';
-            var var_types = {'swe_r': 'monitor/output', 'smtot_r': 'monitor/output', 'precip': 'monitor/forcing', 'tair2m': 'monitor/forcing', 
+            var var_path = {'swe_r': 'monitor/output', 'smtot_r': 'monitor/output', 'precip': 'monitor/forcing', 'tair2m': 'monitor/forcing', 
                              'precip_r': 'monitor/forcing', 'tair2m_r': 'monitor/forcing', 'modis_sca': 'obs/modis'};
             if (typeof this.varname == "undefined") {
                 this.varname = "smtot_r";
@@ -53,14 +54,14 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 dd = ''
             }
             
-            var new_url = base_url + var_types[this.varname] + '/' + yyyy + '/' + this.varname + '_' + yyyy + mm + dd + '.png';
+            var new_url = base_url + var_path[this.varname] + '/' + yyyy + '/' + this.varname + '_' + yyyy + mm + dd + '.png';
             return new_url;
         },
         
         // update overlay color bar
         update_cbar: function(cat, met_var, hydro_var) {
             var base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/';
-            var var_types = {'swe_r': 'monitor/output', 'smtot_r': 'monitor/output', 'precip': 'monitor/forcing', 'tair2m': 'monitor/forcing', 
+            var var_path = {'swe_r': 'monitor/output', 'smtot_r': 'monitor/output', 'precip': 'monitor/forcing', 'tair2m': 'monitor/forcing', 
                              'precip_r': 'monitor/forcing', 'tair2m_r': 'monitor/forcing', 'modis_sca': 'obs/modis'};
             if (typeof this.varname == "undefined") {
                 this.varname = "smtot_r";
@@ -70,7 +71,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             } else if (cat=="hydro") {
                 this.varname = hydro_var;
             }
-            var new_url = base_url + var_types[this.varname] + '/' + this.varname + '_cbar.png';
+            var new_url = base_url + var_path[this.varname] + '/' + this.varname + '_cbar.png';
             return new_url;
         },
         

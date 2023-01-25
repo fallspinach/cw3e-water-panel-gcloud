@@ -1,5 +1,6 @@
 from main import app
-from site_tools import draw_reana, draw_mofor, draw_table, draw_table_all, all_stations, fnf_stations
+from config import all_stations, fnf_stations
+from site_tools import draw_reana, draw_mofor, draw_table, draw_table_all
 from basin_tools import draw_precip_by_elev
 
 from dash.dependencies import ClientsideFunction, Input, Output, State

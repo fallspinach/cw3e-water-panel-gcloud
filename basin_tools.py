@@ -8,8 +8,7 @@ import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 
-from region_tools import maptiles
-from site_tools import fnf_stations, fnf_id_names
+from config import map_tiles, fnf_stations, fnf_id_names
 
 # start to build maps
 ns = Namespace('dashExtensions', 'default')
@@ -24,7 +23,7 @@ elev_bands = dl.GeoJSON(url='assets/elev_bands_FTO.pbf', format='geobuf', id='el
                         hideout=dict(colorscale=elev_scale, classes=elev_classes, style=elev_style, colorProp='low_range'))
                         
 # basin zoom-in map on the right
-map_basin  = dl.Map([maptiles[2], elev_bands],
+map_basin  = dl.Map([map_tiles[2], elev_bands],
                     center=[40, -121], zoom=8, zoomControl=False,
                     style={'width': '100%', 'height': '100%', 'min-height': '400px', 'min-width': '500px', 'margin': '0px', 'display': 'block'})
 

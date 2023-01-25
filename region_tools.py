@@ -5,6 +5,7 @@ from dash_extensions.javascript import Namespace, arrow_function
 
 from datetime import date, datetime, timedelta
 
+from config import map_tiles, data_vars
 
 # temporary set up
 curr_day   = (datetime.utcnow()-timedelta(days=1, hours=14)).date()
@@ -12,33 +13,9 @@ curr_day   = (datetime.utcnow()-timedelta(days=1, hours=14)).date()
 data_start = date(2021, 7, 1)
 data_end   = curr_day
 
-## data variables
-monitor_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/monitor/'
-obs_url     = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/obs/'
-data_vars = [{'label': 'SWE Percentile (daily)',    'name': 'swe_r',    'cat': 'hydro', 'url': monitor_url+'output/%Y/swe_r_%Y%m%d.png',   'cbar': monitor_url+'output/swe_r_cbar.png'},
-             {'label': '2-m SM Percentile (daily)', 'name': 'smtot_r',  'cat': 'hydro', 'url': monitor_url+'output/%Y/smtot_r_%Y%m%d.png', 'cbar': monitor_url+'output/smtot_r_cbar.png'},
-             {'label': 'Precipitation (daily)',     'name': 'precip',   'cat': 'met',   'url': monitor_url+'forcing/%Y/precip_%Y%m%d.png', 'cbar': monitor_url+'forcing/precip_cbar.png'},
-             {'label': 'Air Temperature (daily)',   'name': 'tair2m',   'cat': 'met',   'url': monitor_url+'forcing/%Y/tair2m_%Y%m%d.png', 'cbar': monitor_url+'forcing/tair2m_cbar.png'},
-             {'label': 'P Percentile (monthly)',    'name': 'precip_r', 'cat': 'met',   'url': monitor_url+'forcing/%Y/precip_r_%Y%m.png', 'cbar': monitor_url+'forcing/precip_r_cbar.png'},
-             {'label': 'T Percentile (monthly)',    'name': 'tair2m_r', 'cat': 'met',   'url': monitor_url+'forcing/%Y/atir2m_r_%Y%m.png', 'cbar': monitor_url+'forcing/tair2m_r_cbar.png'},
-             {'label': 'MODIS Snow Cover',          'name': 'modis_sca','cat': 'hydro', 'url': obs_url+'modis/%Y/modis_sca_%Y%m%d.png',    'cbar': obs_url+'modis/modis_sca_cbar.png'}]
-             
 # start to build maps
 ns = Namespace('dashExtensions', 'default')
 locator = dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}})
-
-# some available map tiles
-maptiles = [
-    dl.TileLayer(url='https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
-        #attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, <a href="https://openmaptiles.org/">OpenMapTiles</a>, <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-    ),
-    dl.TileLayer(url='https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png',
-        #attribution='<a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    ),
-    dl.TileLayer(url='http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-        #attribution='&copy; Esri and Community'
-    )
-]
 
 # B-120 forecast points
 b120_points = dl.GeoJSON(url='assets/fnf_points_proj_tooltip_24.pbf', format='geobuf', id='b120-points',
@@ -64,7 +41,7 @@ img_url  = curr_day.strftime(data_vars[data_var_selected]['url'])
 cbar_url = data_vars[data_var_selected]['cbar']
 data_map = dl.ImageOverlay(id='data-img', url=img_url, bounds=cnrfc_domain, opacity=0.7)
 # color bar
-data_cbar = html.A(html.Img(src=cbar_url, title='Color Bar', id='data-cbar-img'), id='data-cbar',
+data_cbar = html.Div(html.Img(src=cbar_url, title='Color Bar', id='data-cbar-img'), id='data-cbar',
                    style={'position': 'absolute', 'left': '18px', 'top': '140px', 'z-index': '500'})
 
 layers_region = [dl.Overlay([data_map, data_cbar], id='data-map-ol',  name='Data',   checked=True),
@@ -73,7 +50,7 @@ layers_region = [dl.Overlay([data_map, data_cbar], id='data-map-ol',  name='Data
                  dl.Overlay(b120_points,      id='sites-ol',  name='Sites',  checked=True)]
                  
 # region map on the left
-map_region = dl.Map([maptiles[1], locator, dl.LayersControl(layers_region)],
+map_region = dl.Map([map_tiles[1], locator, dl.LayersControl(layers_region)],
                     center=[38.2, -119], zoom=6,
                     style={'width': '100%', 'height': '100%', 'min-height': '650px', 'min-width': '700px', 'margin': '0px', 'display': 'block'})
 

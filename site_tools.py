@@ -11,6 +11,8 @@ import numpy as np
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
+from config import fnf_stations, fnf_id_names
+
 curr_day = datetime.utcnow().date()
 fcst_t1  = curr_day - timedelta(days=curr_day.day-1) - relativedelta(months=2)
 fcst_t1  = date(2022, 7, 1)
@@ -18,12 +20,6 @@ fcst_t2  = fcst_t1 + relativedelta(months=6)-timedelta(days=1)
 #fcst_type = 'fusion'
 fcst_type = 'esp'
 
-all_stations = {'AMF': 'American River below Folsom Lake', 'ASP': 'Arroyo Seco near Pasadena', 'ASS': 'Arroyo Seco near Soledad', 'CSN': 'Cosumnes River at Michigan Bar', 'EFC': 'East Carson near Gardnerville', 'EWR': 'East Walker near Bridgeport', 'ERS': 'Eel River at Scotia', 'FTO': 'Feather River at Oroville', 'KWT': 'Kaweah River below Terminus reservoir', 'KRB': 'Kern River below City of Bakersfield', 'KRI': 'Kern River below Lake Isabella', 'KGF': 'Kings River below Pine Flat reservoir', 'KLO': 'Klamath River Copco to Orleans', 'MSS': 'McCloud River above Shasta Lake', 'MRC': 'Merced River below Merced Falls', 'MKM': 'Mokelumne River inflow to Pardee', 'NCD': 'Nacimiento below Nacimiento Dam', 'NPH': 'Napa River near St Helena', 'OWL': 'Owens River below Long Valley Dam', 'PSH': 'Pit River near Montgomerey and Squaw Creek', 'RRH': 'Russian River at Healdsburg', 'SBB': 'Sacramento R above Bend Bridge', 'SDT': 'Sacramento River at Delta', 'SRS': 'Salmon River at Somes Bar', 'SJF': 'San Joaquin River below Millerton Lake', 'ANM': 'Santa Ana River near Mentone', 'SSP': 'Sespe Creek near Fillmore', 'SIS': 'Shasta Lake Total Inflow', 'SNS': 'Stanislaus River below Goodwin', 'TNL': 'Trinity River near Lewiston Lake', 'TRF': 'Truckee River from Tahoe to Farad', 'SCC': 'Tule River below Lake Success', 'TLG': 'Tuolumne River below Lagrange reservoir', 'WFC': 'West Fork Carson at Woodfords', 'WWR': 'West Walker near Coleville', 'YRS': 'Yuba River near Smartsville'}
-
-fnf_stations = ['AMF', 'CSN', 'EFC', 'EWR', 'FTO', 'KGF', 'KRI', 'KWT', 'MKM', 'MRC', 'MSS', 'PSH', 'SBB', 'SCC', 'SDT', 'SIS', 'SJF', 'SNS', 'TLG', 'TNL', 'TRF', 'WFC', 'WWR', 'YRS']
-fnf_stations = ['TNL', 'SDT', 'MSS', 'PSH', 'SIS', 'SBB', 'FTO', 'YRS', 'AMF', 'CSN', 'MKM', 'SNS', 'TLG', 'MRC', 'SJF', 'KGF', 'KWT', 'SCC', 'KRI', 'TRF', 'WFC', 'EFC', 'WWR', 'EWR']
-
-fnf_id_names = {key: all_stations[key] for key in fnf_stations}
 
 ## build time series figures
 base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
