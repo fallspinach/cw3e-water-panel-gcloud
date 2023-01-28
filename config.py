@@ -29,7 +29,10 @@ data_vars = [
     {'label': 'T Percentile (monthly)',    'name': 'tair2m_r', 'cat': 'met',   'url': base_url+'monitor/forcing/%Y/atir2m_r_%Y%m.png', 'cbar': base_url+'monitor/forcing/tair2m_r_cbar.png'},
     {'label': 'MODIS Snow Cover',          'name': 'modis_sca','cat': 'hydro', 'url': base_url+'obs/modis/%Y/modis_sca_%Y%m%d.png',    'cbar': base_url+'obs/modis/modis_sca_cbar.png'}
 ]
-             
+          
+obs_networks = ['Bulletin 120', 'DWR/CDEC', 'CNRFC', 'CW3E', 'SNOTEL', 'USGS', 'MADIS']
+basin_groups = ['Bulletin 120', 'CNRFC', 'FIRO', 'HUC-8', 'HUC-10', 'HUC-12']
+   
 ###############################
 ## site tools section
 
