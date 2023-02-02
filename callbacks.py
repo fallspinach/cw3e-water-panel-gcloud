@@ -96,7 +96,7 @@ def update_flows(fcst_point, n_clicks):
         stain = fcst_point['properties']['tooltip']
     fig_reana = draw_reana(staid)
     fig_mofor = draw_mofor(staid)
-    if staid!='SRS':
+    if staid!='TNL':
         table_fcst = draw_table(staid, all_stations[staid])
     else:
         table_fcst = draw_table_all()
