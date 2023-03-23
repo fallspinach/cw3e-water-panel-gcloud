@@ -33,6 +33,12 @@ cnrfc_style = dict(weight=4, opacity=1, color='gray', fillOpacity=0)
 cnrfc_bound = dl.GeoJSON(url='assets/cnrfc_bd_degree_wgs84.pbf', format='geobuf', id='cnrfc-bound',
                          options=dict(style=ns('b120_style')),
                          hideout=dict(colorscale=['black'], classes=[0], style=cnrfc_style, colorProp='Area_SqMi'))
+# NWM rivers with stream_order>3 and simplified geometry
+river_style = dict(weight=1, opacity=1, color='darkgreen', fillOpacity=0)
+nwm_rivers = dl.GeoJSON(url='assets/nwm_reaches_cnrfc_order4plus_0d001_single_matched.pbf', format='geobuf', id='nwm-rivers',
+                        options=dict(style=ns('river_style')), zoomToBoundsOnClick=True,
+                        hoverStyle=arrow_function(dict(weight=4, color='orange', dashArray='', fillOpacity=0)),
+                        hideout=dict(colorscale=['black'], classes=[0], style=river_style, colorProp='feature_id'))
 
 # image data overlay
 data_var_selected = 1
@@ -46,11 +52,12 @@ data_cbar = html.Div(html.Img(src=cbar_url, title='Color Bar', id='data-cbar-img
 
 layers_region = [dl.Overlay([data_map, data_cbar], id='data-map-ol',  name='Data',   checked=True),
                  dl.Overlay(cnrfc_bound,      id='region-ol', name='Region', checked=True),
+                 dl.Overlay(nwm_rivers,       id='rivers-ol', name='Rivers', checked=False),
                  dl.Overlay(b120_watersheds,  id='basins-ol', name='Basins', checked=True),
                  dl.Overlay(b120_points,      id='sites-ol',  name='Sites',  checked=True)]
                  
 # region map on the left
-map_region = dl.Map([map_tiles[1], locator, dl.LayersControl(layers_region)],
+map_region = dl.Map([map_tiles[1], locator, dl.LayersControl(layers_region)], id='map-region',
                     center=[38.2, -119], zoom=6,
                     style={'width': '100%', 'height': '100%', 'min-height': '650px', 'min-width': '700px', 'margin': '0px', 'display': 'block'})
 

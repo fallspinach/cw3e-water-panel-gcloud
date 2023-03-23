@@ -139,7 +139,15 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         update_basin_elev: function(basin) {
             var new_url = 'assets/elev_bands_' + basin['properties']['Station'] + '.pbf';
             return new_url;
-        }
+        },
         
+        // switch river vector sources according to zoom level
+        switch_river_vector: function(zoom_level) {
+            if (zoom_level<10) {
+                return ['assets/nwm_reaches_cnrfc_order4plus_0d001_single_matched.pbf', true];
+            } else {
+                return ['assets/nwm_reaches_cnrfc_order4plus_0d001.pbf', false];
+            }
+        }
     }
 });

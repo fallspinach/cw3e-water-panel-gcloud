@@ -126,5 +126,16 @@ def update_precip_by_elev(basin):
     
     return fig_precip_by_elev
 
+# callback to switch river vector sources according to zoom level
+app.clientside_callback(
+    ClientsideFunction(
+        namespace='clientside',
+        function_name='switch_river_vector'
+    ),
+    Output('nwm-rivers', 'url'),
+    Output('nwm-rivers', 'zoomToBoundsOnClick'),
+    Input('map-region', 'zoom')
+)
+
 
 

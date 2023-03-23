@@ -26,6 +26,19 @@ window.dashExtensions = Object.assign({}, window.dashExtensions, {
                 }
             }
             return style;
+        },
+        river_style: function(feature, context) {
+            const {
+                classes,
+                colorscale,
+                style,
+                colorProp
+            } = context.props.hideout; // get props from hideout
+            const value = feature.properties['stream_order']; // get value the determines the line thickness
+            if (value > 3) {
+                style.weight = value - 3; // 
+            }
+            return style;
         }
     }
 });
