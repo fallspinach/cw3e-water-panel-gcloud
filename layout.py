@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 
 from region_tools import map_region, control_data_sel, control_time_sel
 from site_tools   import popup_plots
+from river_tools  import popup_plots_river
 from basin_tools  import map_basin, basin_tools
 
 panel_layout = html.Div([
@@ -15,7 +16,7 @@ panel_layout = html.Div([
             ], class_name='g-1', style={'padding-top': '3px'})
         ], width=7),
         dbc.Col([
-            dbc.Row([html.Div([map_basin, popup_plots])]),
+            dbc.Row([html.Div([map_basin, popup_plots, popup_plots_river])]),
             dbc.Row([html.Div(basin_tools)], class_name='g-1', style={'padding-top': '3px'}),
         ], width=5),
     ], class_name='g-1'),

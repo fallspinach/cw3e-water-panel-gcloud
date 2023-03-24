@@ -1,6 +1,7 @@
 from main import app
 from config import all_stations, fnf_stations
 from site_tools import draw_reana, draw_mofor, draw_table, draw_table_all
+from river_tools import draw_mofor_river
 from basin_tools import draw_precip_by_elev
 
 from dash.dependencies import ClientsideFunction, Input, Output, State
@@ -137,5 +138,24 @@ app.clientside_callback(
     Input('map-region', 'zoom')
 )
 
+# create/update streamflow time series for rivers
+@app.callback(Output(component_id='graph-mofor-river', component_property='figure'),
+              Output('popup-plots-river', 'is_open'),
+              Output('popup-plots-river', 'title'),
+              Input('nwm-rivers', 'click_feature'))
+def update_flows_river(fcst_point):
+
+    if 'feature_id' in fcst_point['properties']:
+        staid = fcst_point['properties']['feature_id']
+        stain = fcst_point['properties']['tooltip']
+        pop = True
+    else:
+        staid = ''
+        stain = ''
+        pop = False
+        
+    fig_mofor_river = draw_mofor_river(staid)
+    
+    return [fig_mofor_river, pop, stain]
 
 
