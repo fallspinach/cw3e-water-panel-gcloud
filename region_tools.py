@@ -8,7 +8,7 @@ from datetime import date, datetime, timedelta
 from config import map_tiles, data_vars, obs_networks, basin_groups
 
 # temporary set up
-curr_day   = (datetime.utcnow()-timedelta(days=1, hours=14)).date()
+curr_day   = (datetime.utcnow()-timedelta(days=1, hours=13)).date()
 #curr_day   = date(2022, 12, 31)
 data_start = date(2021, 7, 1)
 data_end   = curr_day
