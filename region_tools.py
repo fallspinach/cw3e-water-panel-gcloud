@@ -41,7 +41,7 @@ nwm_rivers = dl.GeoJSON(url='assets/nwm_reaches_cnrfc_order4plus_0d001_single_ma
                         hideout=dict(colorscale=['black'], classes=[0], style=river_style, colorProp='feature_id'))
 
 # image data overlay
-data_var_selected = 1
+data_var_selected = 0
 cnrfc_domain = [[32, -125], [44, -113]]
 img_url  = curr_day.strftime(data_vars[data_var_selected]['url'])
 cbar_url = data_vars[data_var_selected]['cbar']
