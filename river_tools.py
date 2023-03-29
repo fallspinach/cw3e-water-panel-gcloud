@@ -16,7 +16,7 @@ moni_t1  = curr_day - timedelta(days=curr_day.day-1) - relativedelta(months=2)
 moni_t2  = moni_t1 + relativedelta(months=6)-timedelta(days=1)
 moni_t1  = date(2022, 10,  1)
 moni_t2  = date(2023,  3,  1)
-fcst_t1  = date(2023,  3, 28)
+fcst_t1  = date(2023,  3, 29)
 fcst_t2  = date(2023,  4,  6)
 #fcst_type = 'fusion'
 fcst_type = 'wwrf'

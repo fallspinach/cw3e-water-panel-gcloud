@@ -52,7 +52,7 @@ data_cbar = html.Div(html.Img(src=cbar_url, title='Color Bar', id='data-cbar-img
 
 layers_region = [dl.Overlay([data_map, data_cbar], id='data-map-ol',  name='Data',   checked=True),
                  dl.Overlay(cnrfc_bound,      id='region-ol', name='Region', checked=True),
-                 dl.Overlay(nwm_rivers,       id='rivers-ol', name='Rivers', checked=False),
+                 dl.Overlay(nwm_rivers,       id='rivers-ol', name='Rivers', checked=True),
                  dl.Overlay(b120_watersheds,  id='basins-ol', name='Basins', checked=True),
                  dl.Overlay(b120_points,      id='sites-ol',  name='Sites',  checked=True)]
                  
