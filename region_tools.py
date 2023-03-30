@@ -5,13 +5,12 @@ from dash_extensions.javascript import Namespace, arrow_function
 
 from datetime import date, datetime, timedelta
 
-from config import map_tiles, data_vars, obs_networks, basin_groups
+from config import map_tiles, data_vars, obs_networks, basin_groups, df_system_status
 
 # temporary set up
-curr_day   = (datetime.utcnow()-timedelta(days=1, hours=13)).date()
-#curr_day   = date(2022, 12, 31)
+#curr_day   = (datetime.utcnow()-timedelta(days=1, hours=13)).date()
+last_whmoni = datetime.fromisoformat(df_system_status['WRF-Hydro Monitor'][1]).date()
 data_start = date(2021, 7, 1)
-data_end   = curr_day
 
 # start to build maps
 ns = Namespace('dashExtensions', 'default')
@@ -43,7 +42,7 @@ nwm_rivers = dl.GeoJSON(url='assets/nwm_reaches_cnrfc_order4plus_0d001_single_ma
 # image data overlay
 data_var_selected = 0
 cnrfc_domain = [[32, -125], [44, -113]]
-img_url  = curr_day.strftime(data_vars[data_var_selected]['url'])
+img_url  = last_whmoni.strftime(data_vars[data_var_selected]['url'])
 cbar_url = data_vars[data_var_selected]['cbar']
 data_map = dl.ImageOverlay(id='data-img', url=img_url, bounds=cnrfc_domain, opacity=0.7)
 # color bar
@@ -117,9 +116,9 @@ datepicker = dcc.DatePickerSingle(
     id='datepicker',
     display_format='YYYY-MM-DD',
     min_date_allowed=data_start,
-    max_date_allowed=data_end,
+    max_date_allowed=last_whmoni,
     initial_visible_month=data_start,
-    date=curr_day,
+    date=last_whmoni,
     day_size=30,
 )
 
@@ -135,7 +134,7 @@ button_forward_month  = html.Button('M>', id='button-forward-month',  n_clicks=0
 ## figure title
 title_var  = html.Div(data_vars[data_var_selected]['label'], id='title-var',
                       style={'position': 'absolute', 'left': '50px', 'top': '625px', 'z-index': '500', 'font-size': 'medium'})
-title_date = html.Div(curr_day.strftime(' @ %Y-%m-%d '), id='title-date',
+title_date = html.Div(last_whmoni.strftime(' @ %Y-%m-%d '), id='title-date',
                       style={'position': 'absolute', 'left': '245px', 'top': '625px', 'z-index': '500', 'font-size': 'medium'})
 
 title_zone = html.Div([title_var, title_date], id='title-zone')

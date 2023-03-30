@@ -11,13 +11,12 @@ import numpy as np
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from config import fnf_stations, fnf_id_names
+from config import fnf_stations, fnf_id_names, df_system_status
 
-curr_day = datetime.utcnow().date()
-fcst_t1  = curr_day - timedelta(days=curr_day.day-1) - relativedelta(months=2)
-fcst_t2  = fcst_t1 + relativedelta(months=6)-timedelta(days=1)
-fcst_t1  = date(2023, 3, 1)
-fcst_t2  = date(2023, 8, 31)
+#fcst_t1  = date(2023, 3, 1)
+#fcst_t2  = date(2023, 8, 31)
+fcst_t1 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][0]).date()
+fcst_t2 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][1]).date()
 #fcst_type = 'fusion'
 fcst_type = 'esp_wwrf'
 

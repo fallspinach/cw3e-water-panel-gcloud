@@ -1,6 +1,15 @@
 #### Configuration data here
 
 import dash_leaflet as dl
+import pandas as pd
+
+###############################
+## global configs
+
+# system status
+base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
+fcsv = base_url + 'imgs/monitor/system_status.csv'
+df_system_status = pd.read_csv(fcsv, parse_dates=True)
 
 ###############################
 ## region tools section

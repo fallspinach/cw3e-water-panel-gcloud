@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, datetime, timedelta
 
-from config import map_tiles, fnf_stations, fnf_id_names
+from config import map_tiles, fnf_stations, fnf_id_names, df_system_status
 
 # start to build maps
 ns = Namespace('dashExtensions', 'default')
@@ -58,11 +58,9 @@ snow_tab           = html.Div(['Snowpack and rain-on-snow risk analysis.'], styl
 # draw system status chart
 base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
 def draw_system_status():
-    fcsv = base_url + 'imgs/monitor/system_status.csv'
-    df = pd.read_csv(fcsv, parse_dates=True)
     fig_system_status = go.Figure()
     i = 1
-    for datastream,datatime in df.iteritems():
+    for datastream,datatime in df_system_status.iteritems():
         if datastream not in ['Forcing BC', 'WRF-Hydro Reanalysis', 'Current']:
             fig_system_status.add_trace(go.Scatter(x=datatime, y=[i, i], name=datastream, 
                 text=[datastream+' '+datetime.fromisoformat(datatime[0]).strftime('%-m/%-d %HZ'), datastream+' '+datetime.fromisoformat(datatime[1]).strftime('%-m/%-d %HZ')],
