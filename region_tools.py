@@ -33,7 +33,7 @@ cnrfc_bound = dl.GeoJSON(url='assets/cnrfc_bd_degree_wgs84.pbf', format='geobuf'
                          options=dict(style=ns('b120_style')),
                          hideout=dict(colorscale=['black'], classes=[0], style=cnrfc_style, colorProp='Area_SqMi'))
 # NWM rivers with stream_order>3 and simplified geometry
-river_style = dict(weight=1, opacity=1, color='darkgreen', fillOpacity=0)
+river_style = dict(weight=1, opacity=1, color='green', fillOpacity=0)
 nwm_rivers = dl.GeoJSON(url='assets/nwm_reaches_cnrfc_order4plus_0d001_single_matched.pbf', format='geobuf', id='nwm-rivers',
                         options=dict(style=ns('river_style')), zoomToBoundsOnClick=True,
                         hoverStyle=arrow_function(dict(weight=4, color='orange', dashArray='', fillOpacity=0)),

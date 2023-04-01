@@ -13,10 +13,10 @@ from dateutil.relativedelta import relativedelta
 
 from config import fnf_stations, fnf_id_names, df_system_status
 
-#fcst_t1  = date(2023, 3, 1)
-#fcst_t2  = date(2023, 8, 31)
 fcst_t1 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][0]).date()
 fcst_t2 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][1]).date()
+#fcst_t1  = date(2023, 4, 1)
+#fcst_t2  = date(2023, 9, 30)
 #fcst_type = 'fusion'
 fcst_type = 'esp_wwrf'
 
