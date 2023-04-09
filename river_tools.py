@@ -15,14 +15,14 @@ from dateutil.relativedelta import relativedelta
 from config import df_system_status
 
 moni_t1  = date(2022, 10,  1)
-moni_t2  = date(2023,  3,  1)
-fcst_t1  = date(2023,  3, 29)
-fcst_t2  = date(2023,  4,  6)
+moni_t2  = date(2023,  4,  8)
+fcst_t1  = date(2023,  4,  9)
+fcst_t2  = date(2023,  4, 17)
 
-moni_t2 = datetime.fromisoformat(df_system_status['WRF-Hydro Monitor'][1]).date()
-moni_t1 = date(moni_t2.year-1, 10, 1)
-fcst_t1 = datetime.fromisoformat(df_system_status['WWRF Forecast'][0]).date()
-fcst_t2 = datetime.fromisoformat(df_system_status['WWRF Forecast'][1]).date()
+#moni_t2 = datetime.fromisoformat(df_system_status['WRF-Hydro Monitor'][1]).date()
+#moni_t1 = date(moni_t2.year-1, 10, 1)
+#fcst_t1 = datetime.fromisoformat(df_system_status['WWRF Forecast'][0]).date()
+#fcst_t2 = datetime.fromisoformat(df_system_status['WWRF Forecast'][1]).date()
 
 #fcst_type = 'fusion'
 fcst_type = 'wwrf'
