@@ -2,6 +2,8 @@
 
 import dash_leaflet as dl
 import pandas as pd
+from glob import glob
+from datetime import datetime
 
 ###############################
 ## global configs
@@ -10,6 +12,16 @@ import pandas as pd
 base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
 fcsv = base_url + 'imgs/monitor/system_status.csv'
 df_system_status = pd.read_csv(fcsv, parse_dates=True)
+
+# temporary fix for possible inconsistency between gcloud and system files
+fcstfiles = glob('data/monitor/CHRTOUT_????????-????????.daily.db')
+fcstfiles.sort()
+lastfcst = fcstfiles[-1].split('/')[-1].split('.')[0].split('_')[-1]
+df_system_status['WWRF Forecast'][0]  = datetime.strptime(lastfcst.split('-')[0], '%Y%m%d').isoformat();
+df_system_status['WWRF Forecast'][1]  = datetime.strptime(lastfcst.split('-')[1], '%Y%m%d').isoformat();
+
+# image snapshot export options
+graph_config = {'toImageButtonOptions': {'format': 'svg', 'filename': 'cw3e_water_panel_plot'}} 
 
 ###############################
 ## region tools section

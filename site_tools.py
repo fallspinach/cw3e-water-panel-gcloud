@@ -11,7 +11,7 @@ import numpy as np
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from config import fnf_stations, fnf_id_names, df_system_status
+from config import fnf_stations, fnf_id_names, df_system_status, graph_config
 
 #fcst_t1  = date(2023, 4, 1)
 #fcst_t2  = date(2023, 9, 30)
@@ -154,9 +154,9 @@ fig_ancil = draw_ancil('FTO')
 
 table_fcst = draw_table('FTO', 'Feather River at Oroville')
 
-graph_reana = dcc.Graph(id='graph-reana', figure=fig_reana, style={'height': '360px'})
-graph_mofor = dcc.Graph(id='graph-mofor', figure=fig_mofor, style={'height': '360px'})
-graph_ancil = dcc.Graph(id='graph-ancil', figure=fig_ancil, style={'height': '360px'})
+graph_reana = dcc.Graph(id='graph-reana', figure=fig_reana, style={'height': '360px'}, config=graph_config)
+graph_mofor = dcc.Graph(id='graph-mofor', figure=fig_mofor, style={'height': '360px'}, config=graph_config)
+graph_ancil = dcc.Graph(id='graph-ancil', figure=fig_ancil, style={'height': '360px'}, config=graph_config)
 div_table = html.Div(id='div-table', children=table_fcst, style={'padding': '0px 50px 30px 50px', 'maxHeight': '350px', 'overflowY': 'scroll'})
 
 

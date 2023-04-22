@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, datetime, timedelta
 
-from config import map_tiles, fnf_stations, fnf_id_names, df_system_status
+from config import map_tiles, fnf_stations, fnf_id_names, df_system_status, graph_config
 
 # start to build maps
 ns = Namespace('dashExtensions', 'default')
@@ -48,7 +48,7 @@ def draw_precip_by_elev(staid):
     return fig_precip_by_elev
 
 fig_precip_by_elev = draw_precip_by_elev('FTO')
-graph_precip_by_elev = dcc.Graph(id='graph-precip-by-elev', figure=fig_precip_by_elev, style={'height': '410px', 'padding-top': '10px'})
+graph_precip_by_elev = dcc.Graph(id='graph-precip-by-elev', figure=fig_precip_by_elev, style={'height': '410px', 'padding-top': '10px'}, config=graph_config)
 
 # tool panel
 tool_style  = {'min-height': '412px', 'background-color': 'white', 'font-size': 'small'}
@@ -78,7 +78,7 @@ def draw_system_status():
     return fig_system_status
 
 fig_system_status = draw_system_status()
-graph_system_status = dcc.Graph(id='graph-system_status', figure=fig_system_status, style={'height': '410px', 'padding-top': '10px'})
+graph_system_status = dcc.Graph(id='graph-system_status', figure=fig_system_status, style={'height': '410px', 'padding-top': '10px'}, config=graph_config)
 
 # system status panel
 system_status_tab = html.Div([dcc.Loading(id='loading-system-status', children=graph_system_status)], style=tool_style)

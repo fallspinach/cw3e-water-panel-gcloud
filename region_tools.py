@@ -58,11 +58,11 @@ layers_region = [dl.Overlay([data_map, data_cbar], id='data-map-ol',  name='Data
 # region map on the left
 map_region = dl.Map([map_tiles[1], locator, dl.LayersControl(layers_region)], id='map-region',
                     center=[38.2, -119], zoom=6,
-                    style={'width': '100%', 'height': '100%', 'min-height': '650px', 'min-width': '700px', 'margin': '0px', 'display': 'block'})
+                    style={'width': '100%', 'height': '100%', 'min-height': '740px', 'min-width': '700px', 'margin': '0px', 'display': 'block'})
 
 
 # met variable tab
-tab_style  = {'min-height': '162px', 'background-color': 'white', 'font-size': 'small'}
+tab_style  = {'min-height': '72px', 'background-color': 'white', 'font-size': 'small'}
 item_style = {'margin': '5px 10px 2px 10px'}
 met_vars = [{'label': v['label'], 'value': v['name']} for v in data_vars if v['cat']=='met']
 met_tab = html.Div(dcc.RadioItems(options=met_vars, value=met_vars[0]['value'], id='met-vars', inputStyle=item_style), style=tab_style)
@@ -133,9 +133,9 @@ button_forward_month  = html.Button('M>', id='button-forward-month',  n_clicks=0
 
 ## figure title
 title_var  = html.Div(data_vars[data_var_selected]['label'], id='title-var',
-                      style={'position': 'absolute', 'left': '50px', 'top': '625px', 'z-index': '500', 'font-size': 'medium'})
+                      style={'position': 'absolute', 'left': '50px', 'top': '715px', 'z-index': '500', 'font-size': 'medium'})
 title_date = html.Div(last_whmoni.strftime(' @ %Y-%m-%d '), id='title-date',
-                      style={'position': 'absolute', 'left': '245px', 'top': '625px', 'z-index': '500', 'font-size': 'medium'})
+                      style={'position': 'absolute', 'left': '245px', 'top': '715px', 'z-index': '500', 'font-size': 'medium'})
 
 title_zone = html.Div([title_var, title_date], id='title-zone')
 
@@ -144,8 +144,10 @@ button_open_popup  = html.Button('Open Time Series Window', id='button-open-popu
 tab_stylec = tab_style.copy()
 tab_stylec.update({'text-align': 'center', 'padding-top': '15px'})
 # time step selection tab
+#timestep_tab = html.Div([button_backward_month, button_backward_day, button_backward_hour, datepicker, 
+#                         button_forward_hour, button_forward_day, button_forward_month, slider_hour, button_open_popup, title_var, title_date], style=tab_stylec)
 timestep_tab = html.Div([button_backward_month, button_backward_day, button_backward_hour, datepicker, 
-                         button_forward_hour, button_forward_day, button_forward_month, slider_hour, button_open_popup, title_var, title_date], style=tab_stylec)
+                         button_forward_hour, button_forward_day, button_forward_month, title_var, title_date], style=tab_stylec)
 
 ## month slider
 month_marks = {}
@@ -168,7 +170,8 @@ slider_month =  html.Div(
 )
 
 # monthly climatology selection tab
-clim_tab = html.Div(['Select Month', slider_month], style=tab_stylec)
+#clim_tab = html.Div(['Select Month', slider_month], style=tab_stylec)
+clim_tab = html.Div([slider_month], style=tab_stylec)
 
 # tabs for time step selection
 control_time_sel = html.Div(dcc.Tabs([

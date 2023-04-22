@@ -86,9 +86,8 @@ app.clientside_callback(
               Output(component_id='div-table', component_property='children'),
               Output('popup-plots', 'is_open'),
               Output('popup-plots', 'title'),
-              Input('b120-points', 'click_feature'),
-              Input('button-open-popup', 'n_clicks'))
-def update_flows(fcst_point, n_clicks):
+              Input('b120-points', 'click_feature'))
+def update_flows(fcst_point):
     if fcst_point==None:
         staid = 'FTO'
         stain = 'FTO: Feather River at Oroville'

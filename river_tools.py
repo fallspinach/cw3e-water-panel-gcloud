@@ -12,17 +12,17 @@ import numpy as np
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from config import df_system_status
+from config import df_system_status, graph_config
 
-moni_t1  = date(2022, 10,  1)
-moni_t2  = date(2023,  4,  8)
-fcst_t1  = date(2023,  4,  9)
-fcst_t2  = date(2023,  4, 17)
+#moni_t1  = date(2022, 10,  1)
+#moni_t2  = date(2023,  4, 12)
+#fcst_t1  = date(2023,  4, 13)
+#fcst_t2  = date(2023,  4, 21)
 
-#moni_t2 = datetime.fromisoformat(df_system_status['WRF-Hydro Monitor'][1]).date()
-#moni_t1 = date(moni_t2.year-1, 10, 1)
-#fcst_t1 = datetime.fromisoformat(df_system_status['WWRF Forecast'][0]).date()
-#fcst_t2 = datetime.fromisoformat(df_system_status['WWRF Forecast'][1]).date()
+moni_t2 = datetime.fromisoformat(df_system_status['WRF-Hydro Monitor'][1]).date()
+moni_t1 = date(moni_t2.year-1, 10, 1)
+fcst_t1 = datetime.fromisoformat(df_system_status['WWRF Forecast'][0]).date()
+fcst_t2 = datetime.fromisoformat(df_system_status['WWRF Forecast'][1]).date()
 
 #fcst_type = 'fusion'
 fcst_type = 'wwrf'
@@ -120,7 +120,7 @@ def draw_mofor_river_db(rivid):
     
 fig_mofor_river = draw_mofor_river_db('342455')
 
-graph_mofor_river = dcc.Graph(id='graph-mofor-river', figure=fig_mofor_river, style={'height': '360px'})
+graph_mofor_river = dcc.Graph(id='graph-mofor-river', figure=fig_mofor_river, style={'height': '360px'}, config=graph_config)
 
 tabtitle_style          = {'padding': '2px', 'height': '28px', 'font-size': 'small'}
 tabtitle_selected_style = {'padding': '2px', 'height': '28px', 'font-size': 'small', 'font-weight': 'bold'}
