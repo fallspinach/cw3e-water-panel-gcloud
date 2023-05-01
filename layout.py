@@ -19,8 +19,9 @@ panel_layout = dbc.Container([
                 dbc.Row([html.Div([map_basin, popup_plots, popup_plots_river])]),
                 dbc.Row([html.Div(basin_tools)], class_name='g-1', style={'padding-top': '3px'}),
             ], width=5),
-        ], class_name='g-1'),
+        ], class_name='g-1', style={'hight': '100%'}),
     ], fluid=True,
-    style={'width': '98%', 'min-width': '1200px', 'hight': '100%', 'min-height': '850px', 'margin-bottom': '170px', 'background': '#888888', 'padding': '3px'}) #1e6b8b
+    style={'width': '98%', 'min-width': '1200px', 'hight': '100%', 'min-height': '850px', 'margin-bottom': '170px', 'background': '#888888', 'padding': '3px'}
+) #1e6b8b
 
 #style_copy={'width': '95%', 'min-width': '1200px', 'hight': '100%', 'min-height': '850px', 'margin-left': 'auto', 'margin-right': 'auto', 'margin-bottom': '170px', 'background': '#888888', 'padding': '3px'}

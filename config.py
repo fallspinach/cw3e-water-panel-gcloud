@@ -21,7 +21,7 @@ df_system_status['WWRF Forecast'][0]  = datetime.strptime(lastfcst.split('-')[0]
 df_system_status['WWRF Forecast'][1]  = datetime.strptime(lastfcst.split('-')[1], '%Y%m%d').isoformat();
 
 # image snapshot export options
-graph_config = {'toImageButtonOptions': {'format': 'svg', 'filename': 'cw3e_water_panel_plot'}} 
+graph_config = {'toImageButtonOptions': {'format': 'png', 'filename': 'cw3e_water_panel_plot', 'scale': 3}, 'displaylogo': False} 
 
 ###############################
 ## region tools section

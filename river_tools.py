@@ -41,7 +41,7 @@ def draw_mofor_river(rivid):
         fillcolors = ['sienna', 'orange', 'yellow', 'lightgreen', 'lightcyan', 'lightblue', 'mediumpurple']
         fillcolors.reverse()
         for i,pctl in enumerate([95, 90, 80, 50, 20, 10, 5]):
-            fcsv = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.csv.gz' % (moni_t1.strftime('%Y%m'), fcst_t2.strftime('%Y%m'), pctl)
+            fcsv = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.csv.gz' % (moni_t1.strftime('%Y%m'), (fcst_t2+timedelta(days=5)).strftime('%Y%m'), pctl)
             df = pd.read_csv(fcsv, parse_dates=True, usecols = ['Date', str(rivid)])
             num = df._get_numeric_data(); num[num<0] = 0
             df.rename(columns={str(rivid): 'Flow'}, inplace=True)
@@ -79,7 +79,7 @@ def draw_mofor_river_db(rivid):
         fillcolors = ['sienna', 'orange', 'yellow', 'lightgreen', 'lightcyan', 'lightblue', 'mediumpurple']
         fillcolors.reverse()
         for i,pctl in enumerate([95, 90, 80, 50, 20, 10, 5]):
-            fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.db' % (moni_t1.strftime('%Y%m'), fcst_t2.strftime('%Y%m'), pctl)
+            fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.db' % (moni_t1.strftime('%Y%m'), (fcst_t2+timedelta(days=5)).strftime('%Y%m'), pctl)
             conn = sqlite3.connect(fdb)
             df = pd.read_sql_query('SELECT * FROM streamflow WHERE [index]=%s' % str(rivid), conn).T
             conn.close()
