@@ -29,7 +29,6 @@ map_basin  = dl.Map([map_tiles[2], elev_bands],
                     style={'width': '100%', 'height': '100%', 'min-height': '400px', 'min-width': '500px', 'margin': '0px', 'display': 'block'})
 
 # draw precip climatology by elevation bands
-base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
 base_url = ''
 def draw_precip_by_elev(staid):
     if staid in fnf_stations:
@@ -56,7 +55,6 @@ precip_by_elev_tab = html.Div([dcc.Loading(id='loading-precip-by-elev', children
 snow_tab           = html.Div(['Snowpack and rain-on-snow risk analysis.'], style=tool_style)
 
 # draw system status chart
-base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
 def draw_system_status():
     fig_system_status = go.Figure()
     i = 1

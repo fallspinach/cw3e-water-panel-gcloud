@@ -22,7 +22,6 @@ fcst_type = 'esp_wwrf'
 
 
 ## build time series figures
-base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
 base_url = ''
 
 # flow reanalysis figure

@@ -42,7 +42,7 @@ map_tiles = [
 ]
 
 ## data variables
-base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/'
+base_url += 'imgs/'
 data_vars = [
     {'label': 'SWE Percentile (daily)',    'name': 'swe_r',    'cat': 'hydro', 'url': base_url+'monitor/output/%Y/swe_r_%Y%m%d.png',   'cbar': base_url+'monitor/output/swe_r_cbar.png'},
     {'label': '2-m SM Percentile (daily)', 'name': 'smtot_r',  'cat': 'hydro', 'url': base_url+'monitor/output/%Y/smtot_r_%Y%m%d.png', 'cbar': base_url+'monitor/output/smtot_r_cbar.png'},
