@@ -20,7 +20,10 @@ from config import df_system_status, graph_config
 #fcst_t2  = date(2023,  4, 21)
 
 moni_t2 = datetime.fromisoformat(df_system_status['WRF-Hydro Monitor'][1]).date()
-moni_t1 = date(moni_t2.year-1, 10, 1)
+if moni_t2.month>=10:
+    moni_t1 = date(moni_t2.year, 1, 1)
+else:
+    moni_t1 = date(moni_t2.year-1, 10, 1)
 fcst_t1 = datetime.fromisoformat(df_system_status['WWRF Forecast'][0]).date()
 fcst_t2 = datetime.fromisoformat(df_system_status['WWRF Forecast'][1]).date()
 
@@ -41,7 +44,7 @@ def draw_mofor_river(rivid):
         fillcolors = ['sienna', 'orange', 'yellow', 'lightgreen', 'lightcyan', 'lightblue', 'mediumpurple']
         fillcolors.reverse()
         for i,pctl in enumerate([95, 90, 80, 50, 20, 10, 5]):
-            fcsv = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.csv.gz' % (moni_t1.strftime('%Y%m'), (fcst_t2+timedelta(days=5)).strftime('%Y%m'), pctl)
+            fcsv = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.csv.gz' % (moni_t1.strftime('%Y%m'), (fcst_t2-timedelta(days=5)).strftime('%Y%m'), pctl)
             df = pd.read_csv(fcsv, parse_dates=True, usecols = ['Date', str(rivid)])
             num = df._get_numeric_data(); num[num<0] = 0
             df.rename(columns={str(rivid): 'Flow'}, inplace=True)
@@ -78,8 +81,10 @@ def draw_mofor_river_db(rivid):
         
         fillcolors = ['sienna', 'orange', 'yellow', 'lightgreen', 'lightcyan', 'lightblue', 'mediumpurple']
         fillcolors.reverse()
+        clim_t2 = fcst_t2 if fcst_t2>moni_t2 else moni_t2
         for i,pctl in enumerate([95, 90, 80, 50, 20, 10, 5]):
-            fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.db' % (moni_t1.strftime('%Y%m'), (fcst_t2+timedelta(days=5)).strftime('%Y%m'), pctl)
+            fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.db' % (moni_t1.strftime('%Y%m'), (clim_t2-timedelta(days=5)).strftime('%Y%m'), pctl)
+            #print(fdb)
             conn = sqlite3.connect(fdb)
             df = pd.read_sql_query('SELECT * FROM streamflow WHERE [index]=%s' % str(rivid), conn).T
             conn.close()
@@ -89,7 +94,7 @@ def draw_mofor_river_db(rivid):
             tsname = '  %d<sup>th</sup>' % pctl if pctl<10 else '%d<sup>th</sup>' % pctl
             fig_mofor.add_trace(go.Scatter(x=df.index, y=df['Flow'], name=tsname, line=dict(color=fillcolors[i]), fill='tozeroy', mode='lines'))
         
-        fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.db' % (moni_t1.strftime('%Y%m'), moni_t2.strftime('%Y%m'))
+        fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.db' % (moni_t1.strftime('%Y%m'), moni_t2.strftime('%Y%m'))#; print(fdb)
         conn = sqlite3.connect(fdb)
         df = pd.read_sql_query('SELECT * FROM streamflow WHERE [index]=%s' % str(rivid), conn).T
         conn.close()

@@ -34,7 +34,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         
         // update overlay image url
         update_img_url: function(date_value, cat, met_var, hydro_var) {
-            var base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/';
+            //var base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/';
+            var base_url = 'https://storage.googleapis.com/cw3e-water-panel.appspot.com/imgs/';
             var var_path = {'swe_r': 'monitor/output', 'smtot_r': 'monitor/output', 'precip': 'monitor/forcing', 'tair2m': 'monitor/forcing', 
                              'precip_r': 'monitor/forcing', 'tair2m_r': 'monitor/forcing', 'modis_sca': 'obs/modis'};
             if (typeof this.varname == "undefined") {
@@ -60,7 +61,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         
         // update overlay color bar
         update_cbar: function(cat, met_var, hydro_var) {
-            var base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/';
+            //var base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/imgs/';
+            var base_url = 'https://storage.googleapis.com/cw3e-water-panel.appspot.com/imgs/';
             var var_path = {'swe_r': 'monitor/output', 'smtot_r': 'monitor/output', 'precip': 'monitor/forcing', 'tair2m': 'monitor/forcing', 
                              'precip_r': 'monitor/forcing', 'tair2m_r': 'monitor/forcing', 'modis_sca': 'obs/modis'};
             if (typeof this.varname == "undefined") {
