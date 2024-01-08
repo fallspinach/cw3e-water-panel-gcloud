@@ -10,6 +10,8 @@ import pandas as pd
 import numpy as np
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from glob import glob
+import os
 
 from config import fnf_stations, fnf_id_names, df_system_status, graph_config
 
@@ -20,6 +22,11 @@ fcst_t2 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][1]).d
 #fcst_type = 'fusion'
 fcst_type = 'esp_wwrf'
 
+# find all forecasts in the current year
+tup1 = datetime(fcst_t1.year, 1, 1)
+tup2 = datetime(fcst_t1.year, 7, 31)
+dt_updates = [datetime.strptime(os.path.basename(d).split('_')[-1], 'update%Y%m%d') for d in glob(f'data/forecast/{fcst_type}_init{fcst_t1.year}*_update*')]
+tup_latest = dt_updates[-1]
 
 ## build time series figures
 base_url = ''
@@ -27,7 +34,7 @@ base_url = ''
 # flow reanalysis figure
 def draw_reana(staid):
     if staid in fnf_stations:
-        fcsv = base_url + 'data/reanalysis/%s.csv' % staid
+        fcsv = f'{base_url}data/reanalysis/{staid}.csv'
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', names=['Date', 'FNF', 'Qsim', 'QsimBC'])
         fig_reana = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'})
     else:
@@ -37,9 +44,9 @@ def draw_reana(staid):
     return fig_reana
     
 # flow monitor/forecast figure
-def draw_mofor(staid):
+def draw_mofor(staid, fcst_update):
     if staid in fnf_stations:
-        fcsv = base_url + 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', usecols = ['Date']+['Ens%02d' % (i+1) for i in range(42)]+['Avg', 'Exc50', 'Exc90', 'Exc10'])
         df.drop(index=df.index[-1], axis=0, inplace=True)
         linecolors = {'Ens%02d' % (i+1): 'lightgray' for i in range(42)}
@@ -63,10 +70,10 @@ def draw_ancil(staid):
 table_note = html.Div('  [Note] 50%, 90%, 10%: exceedance levels within the forecast ensemble. AVG: month of year average during 1979-2020. %AVG: percentage of AVG. KAF: kilo-acre-feet.', id='table-note', style={'font-size': 'small'})
 
 # forecast table
-def draw_table(staid, staname):
+def draw_table(staid, staname, fcst_update):
     cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
     if staid in fnf_stations:
-        fcsv = base_url + 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=False, usecols=cols)
         df = df[cols]
         cols.remove('Date')
@@ -74,7 +81,7 @@ def draw_table(staid, staname):
         df['Date'] = [ datetime.strptime(m, '%Y-%m-%d').strftime('%B %Y') for m in df['Date'] ]
         df.iloc[-1, 0] = df.iloc[-1, 0].replace('July', 'April-July total')
     else:
-        fcsv = 'data/forecast/%s_%s/FTO_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/FTO_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=False, usecols=cols)
         df = df[cols]
         df.drop(df.index, inplace=True)
@@ -100,11 +107,11 @@ def draw_table(staid, staname):
     return [table_fcst, table_note]
 
 # forecast tables over all FNF stations
-def draw_table_all():
+def draw_table_all(fcst_update):
     cnt = 0
     for staid,staname in fnf_id_names.items():
         cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
-        fcsv = base_url + 'data/forecast/%s_%s/%s_%s-%s.csv' % (fcst_type, fcst_t1.strftime('%Y%m%d'), staid, fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=False, usecols=cols)
         df = df[cols]
         cols.remove('Date')
@@ -148,10 +155,10 @@ def draw_table_all():
 ## pop-up window and its tabs/graphs/tables
 
 fig_reana = draw_reana('FTO')
-fig_mofor = draw_mofor('FTO')
+fig_mofor = draw_mofor('FTO', tup_latest)
 fig_ancil = draw_ancil('FTO')
 
-table_fcst = draw_table('FTO', 'Feather River at Oroville')
+table_fcst = draw_table('FTO', 'Feather River at Oroville', tup_latest)
 
 graph_reana = dcc.Graph(id='graph-reana', figure=fig_reana, style={'height': '360px'}, config=graph_config)
 graph_mofor = dcc.Graph(id='graph-mofor', figure=fig_mofor, style={'height': '360px'}, config=graph_config)
@@ -167,10 +174,19 @@ tab_mofor = dcc.Tab(label='Monitor/Forecast',value='mofor', children=[dcc.Loadin
 tab_ancil = dcc.Tab(label='Ancillary Data',  value='ancil', children=[dcc.Loading(id='loading-ancil', children=graph_ancil)], style=tabtitle_style, selected_style=tabtitle_selected_style)
 tab_table = dcc.Tab(label='Table',           value='table', children=[dcc.Loading(id='loading-table', children=div_table)],   style=tabtitle_style, selected_style=tabtitle_selected_style)
 
-popup_tabs = dcc.Tabs([tab_reana, tab_mofor, tab_ancil, tab_table], id='popup-tabs', value='reana')
+#popup_tabs = dcc.Tabs([tab_mofor, tab_table, tab_reana, tab_ancil], id='popup-tabs', value='mofor')
+popup_tabs = dcc.Tabs([tab_mofor, tab_table, tab_reana], id='popup-tabs', value='mofor')
 
-popup_plots = dbc.Offcanvas(
-    [popup_tabs],
+slider_updates = dcc.Slider(min=tup1.timetuple().tm_yday, max=tup2.timetuple().tm_yday, step=None,
+    marks={dt.timetuple().tm_yday: dt.strftime('%-m/%-d') for dt in dt_updates},
+    value=tup_latest.timetuple().tm_yday,
+    id='slider_updates'
+)
+
+slider_text  = html.Div('Forecast Updated on:', style={'display': 'inline-block', 'font-weight': 'bold', 'vertical-align': 'top'})
+slider_block = html.Div(slider_updates, style={'width': '85%', 'display': 'inline-block'})
+
+popup_plots = dbc.Offcanvas([slider_text, slider_block, popup_tabs],
     title='B-120 Forecast Point', placement='top', is_open=False, scrollable=True, id='popup-plots',
-    style={'opacity': '0.9', 'width': '90%', 'min-width': '1000px', 'min-height': '500px', 'margin-top': '150px', 'margin-left': 'auto', 'margin-right': 'auto', 'font-size': 'smaller'}
+    style={'opacity': '0.9', 'width': '90%', 'min-width': '1000px', 'min-height': '540px', 'margin-top': '150px', 'margin-left': 'auto', 'margin-right': 'auto', 'font-size': 'smaller'}
 )

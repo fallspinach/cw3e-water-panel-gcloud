@@ -5,6 +5,10 @@ from river_tools import draw_mofor_river, draw_mofor_river_db
 from basin_tools import draw_precip_by_elev
 
 from dash.dependencies import ClientsideFunction, Input, Output, State
+from config import df_system_status
+from datetime import datetime, timedelta
+
+fcst_t1 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][0]).date()
 
 ## Callbacks from here on
 
@@ -86,20 +90,22 @@ app.clientside_callback(
               Output(component_id='div-table', component_property='children'),
               Output('popup-plots', 'is_open'),
               Output('popup-plots', 'title'),
-              Input('b120-points', 'click_feature'))
-def update_flows(fcst_point):
+              Input('b120-points', 'click_feature'),
+              Input('slider_updates', 'value'))
+def update_flows(fcst_point, yday_update):
     if fcst_point==None:
         staid = 'FTO'
         stain = 'FTO: Feather River at Oroville'
     else:
         staid = fcst_point['properties']['Station_ID']
         stain = fcst_point['properties']['tooltip']
+    fcst_update = datetime(fcst_t1.year, 1, 1) + timedelta(days=yday_update-1)
     fig_reana = draw_reana(staid)
-    fig_mofor = draw_mofor(staid)
+    fig_mofor = draw_mofor(staid, fcst_update)
     if staid!='TNL':
-        table_fcst = draw_table(staid, all_stations[staid])
+        table_fcst = draw_table(staid, all_stations[staid], fcst_update)
     else:
-        table_fcst = draw_table_all()
+        table_fcst = draw_table_all(fcst_update)
     
     return [fig_reana, fig_mofor, table_fcst, True, stain]
 
