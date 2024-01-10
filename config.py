@@ -11,7 +11,7 @@ from datetime import datetime
 # system status
 #base_url = 'https://cw3e.ucsd.edu/wrf_hydro/cnrfc/' # easier to update the data but slow to load
 base_url = 'https://storage.googleapis.com/cw3e-water-panel.appspot.com/'
-fcsv = base_url + 'imgs/monitor/system_status.csv'
+fcsv = f'{base_url}imgs/monitor/system_status.csv'
 df_system_status = pd.read_csv(fcsv, parse_dates=True)
 
 # temporary fix for possible inconsistency between gcloud and system files
@@ -42,15 +42,17 @@ map_tiles = [
 ]
 
 ## data variables
-base_url += 'imgs/'
+output_url  = f'{base_url}imgs/monitor/output'
+forcing_url = f'{base_url}imgs/monitor/forcing'
+obs_url     = f'{base_url}imgs/obs'
 data_vars = [
-    {'label': 'SWE Percentile (daily)',    'name': 'swe_r',    'cat': 'hydro', 'url': base_url+'monitor/output/%Y/swe_r_%Y%m%d.png',   'cbar': base_url+'monitor/output/swe_r_cbar.png'},
-    {'label': '2-m SM Percentile (daily)', 'name': 'smtot_r',  'cat': 'hydro', 'url': base_url+'monitor/output/%Y/smtot_r_%Y%m%d.png', 'cbar': base_url+'monitor/output/smtot_r_cbar.png'},
-    {'label': 'Precipitation (daily)',     'name': 'precip',   'cat': 'met',   'url': base_url+'monitor/forcing/%Y/precip_%Y%m%d.png', 'cbar': base_url+'monitor/forcing/precip_cbar.png'},
-    {'label': 'Air Temperature (daily)',   'name': 'tair2m',   'cat': 'met',   'url': base_url+'monitor/forcing/%Y/tair2m_%Y%m%d.png', 'cbar': base_url+'monitor/forcing/tair2m_cbar.png'},
-    {'label': 'P Percentile (monthly)',    'name': 'precip_r', 'cat': 'met',   'url': base_url+'monitor/forcing/%Y/precip_r_%Y%m.png', 'cbar': base_url+'monitor/forcing/precip_r_cbar.png'},
-    {'label': 'T Percentile (monthly)',    'name': 'tair2m_r', 'cat': 'met',   'url': base_url+'monitor/forcing/%Y/atir2m_r_%Y%m.png', 'cbar': base_url+'monitor/forcing/tair2m_r_cbar.png'},
-    {'label': 'MODIS Snow Cover',          'name': 'modis_sca','cat': 'hydro', 'url': base_url+'obs/modis/%Y/modis_sca_%Y%m%d.png',    'cbar': base_url+'obs/modis/modis_sca_cbar.png'}
+    {'label': 'SWE Percentile (daily)',    'name': 'swe_r',    'cat': 'hydro', 'url': f'{output_url}/%Y/swe_r_%Y%m%d.png',   'cbar': f'{output_url}/swe_r_cbar.png'},
+    {'label': '2-m SM Percentile (daily)', 'name': 'smtot_r',  'cat': 'hydro', 'url': f'{output_url}/%Y/smtot_r_%Y%m%d.png', 'cbar': f'{output_url}/smtot_r_cbar.png'},
+    {'label': 'Precipitation (daily)',     'name': 'precip',   'cat': 'met',   'url': f'{forcing_url}/%Y/precip_%Y%m%d.png', 'cbar': f'{forcing_url}/precip_cbar.png'},
+    {'label': 'Air Temperature (daily)',   'name': 'tair2m',   'cat': 'met',   'url': f'{forcing_url}/%Y/tair2m_%Y%m%d.png', 'cbar': f'{forcing_url}/tair2m_cbar.png'},
+    {'label': 'P Percentile (monthly)',    'name': 'precip_r', 'cat': 'met',   'url': f'{forcing_url}/%Y/precip_r_%Y%m.png', 'cbar': f'{forcing_url}/precip_r_cbar.png'},
+    {'label': 'T Percentile (monthly)',    'name': 'tair2m_r', 'cat': 'met',   'url': f'{forcing_url}/%Y/atir2m_r_%Y%m.png', 'cbar': f'{forcing_url}/tair2m_r_cbar.png'},
+    {'label': 'MODIS Snow Cover',          'name': 'modis_sca','cat': 'hydro', 'url': f'{obs_url}/modis/%Y/modis_sca_%Y%m%d.png', 'cbar': f'{obs_url}/modis/modis_sca_cbar.png'}
 ]
           
 obs_networks = ['Bulletin 120', 'DWR/CDEC', 'CNRFC', 'CW3E', 'SNOTEL', 'USGS', 'MADIS']

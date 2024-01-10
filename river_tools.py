@@ -33,45 +33,6 @@ fcst_type = 'wwrf'
 
 ## build time series figures
 base_url = ''
-
-    
-# flow monitor/forecast figure
-def draw_mofor_river(rivid):
-    if rivid != '':
-        fig_mofor = go.Figure()
-        
-        fillcolors = ['sienna', 'orange', 'yellow', 'lightgreen', 'lightcyan', 'lightblue', 'mediumpurple']
-        fillcolors.reverse()
-        for i,pctl in enumerate([95, 90, 80, 50, 20, 10, 5]):
-            fcsv = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.csv.gz' % (moni_t1.strftime('%Y%m'), (fcst_t2+timedelta(days=15)).strftime('%Y%m'), pctl)
-            df = pd.read_csv(fcsv, parse_dates=True, usecols = ['Date', str(rivid)])
-            num = df._get_numeric_data(); num[num<0] = 0
-            df.rename(columns={str(rivid): 'Flow'}, inplace=True)
-            tsname = '  %d<sup>th</sup>' % pctl if pctl<10 else '%d<sup>th</sup>' % pctl
-            fig_mofor.add_trace(go.Scatter(x=df['Date'], y=df['Flow'], name=tsname, line=dict(color=fillcolors[i]), fill='tozeroy', mode='lines'))
-        
-        fcsv = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.csv.gz' % (moni_t1.strftime('%Y%m'), moni_t2.strftime('%Y%m'))
-        df = pd.read_csv(fcsv, parse_dates=True, usecols = ['Date', str(rivid)])
-        num = df._get_numeric_data(); num[num<0] = 0
-        df.rename(columns={str(rivid): 'Flow'}, inplace=True)
-        #fig_mofor.add_trace(go.Scatter(x=df['Date'], y=df['Flow'], name='Monitor', line=dict(color='blue'), mode='lines+markers'))
-        df2 = df.tail(1)
-        
-        fcsv = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.csv.gz' % (fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
-        dff = pd.read_csv(fcsv, parse_dates=True, usecols = ['Date', str(rivid)])
-        num = dff._get_numeric_data(); num[num<0] = 0
-        dff.rename(columns={str(rivid): 'Flow'}, inplace=True)
-        dff = pd.concat([df2, dff]).reset_index(drop = True)
-        fig_mofor.add_trace(go.Scatter(x=dff['Date'], y=dff['Flow'], name='Forecast', line=dict(color='magenta'), mode='lines+markers'))
-        fig_mofor.add_trace(go.Scatter(x=df['Date'], y=df['Flow'], name='Monitor', line=dict(color='blue'), mode='lines+markers'))
-        
-    else:
-        fig_mofor = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (m^3/s)'})
-    fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''), hovermode='x unified',
-                            xaxis_title='Forecast Initiated on %s' % fcst_t1.strftime('%b %d, %Y'),
-                            yaxis_title='Model Estimated Flow (m<sup>3</sup>/s, <b>uncorrected</b>)')
-    fig_mofor.update_traces(hovertemplate=None)
-    return fig_mofor
     
 # flow monitor/forecast figure
 def draw_mofor_river_db(rivid):
@@ -82,20 +43,20 @@ def draw_mofor_river_db(rivid):
         fillcolors.reverse()
         clim_t2 = fcst_t2 if fcst_t2>moni_t2 else moni_t2
         for i,pctl in enumerate([95, 90, 80, 50, 20, 10, 5]):
-            fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.pctl%02d.db' % (moni_t1.strftime('%Y%m'), (clim_t2+timedelta(days=15)).strftime('%Y%m'), pctl)
+            fdb = f'{base_url}data/monitor/CHRTOUT_{moni_t1:%Y%m}-{(clim_t2+timedelta(days=15)):%Y%m}.daily.pctl{pctl:02d}.db'
             #print(fdb)
             conn = sqlite3.connect(fdb)
-            df = pd.read_sql_query('SELECT * FROM streamflow WHERE [index]=%s' % str(rivid), conn).T
+            df = pd.read_sql_query(f'SELECT * FROM streamflow WHERE [index]={rivid}', conn).T
             conn.close()
             df.drop(index=df.index[0], axis=0, inplace=True)
             num = df._get_numeric_data(); num[num<0] = 0
             df.rename(columns={0: 'Flow'}, inplace=True)
-            tsname = '  %d<sup>th</sup>' % pctl if pctl<10 else '%d<sup>th</sup>' % pctl
+            tsname = f'  {pctl:d}<sup>th</sup>' if pctl<10 else f'{pctl:d}<sup>th</sup>'
             fig_mofor.add_trace(go.Scatter(x=df.index, y=df['Flow'], name=tsname, line=dict(color=fillcolors[i]), fill='tozeroy', mode='lines'))
         
-        fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.db' % (moni_t1.strftime('%Y%m'), moni_t2.strftime('%Y%m'))#; print(fdb)
+        fdb = f'{base_url}data/monitor/CHRTOUT_{moni_t1:%Y%m}-{moni_t2:%Y%m}.daily.db'#; print(fdb)
         conn = sqlite3.connect(fdb)
-        df = pd.read_sql_query('SELECT * FROM streamflow WHERE [index]=%s' % str(rivid), conn).T
+        df = pd.read_sql_query(f'SELECT * FROM streamflow WHERE [index]={rivid}', conn).T
         conn.close()
         df.drop(index=df.index[0], axis=0, inplace=True)
         num = df._get_numeric_data(); num[num<0] = 0
@@ -103,9 +64,9 @@ def draw_mofor_river_db(rivid):
         #fig_mofor.add_trace(go.Scatter(x=df['Date'], y=df['Flow'], name='Monitor', line=dict(color='blue'), mode='lines+markers'))
         df2 = df.tail(1)
         
-        fdb = base_url + 'data/monitor/CHRTOUT_%s-%s.daily.db' % (fcst_t1.strftime('%Y%m%d'), fcst_t2.strftime('%Y%m%d'))
+        fdb = f'{base_url}data/monitor/CHRTOUT_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.daily.db'
         conn = sqlite3.connect(fdb)
-        dff = pd.read_sql_query('SELECT * FROM streamflow WHERE [index]=%s' % str(rivid), conn).T
+        dff = pd.read_sql_query(f'SELECT * FROM streamflow WHERE [index]={rivid}', conn).T
         conn.close()
         dff.drop(index=dff.index[0], axis=0, inplace=True)
         num = dff._get_numeric_data(); num[num<0] = 0
@@ -117,7 +78,7 @@ def draw_mofor_river_db(rivid):
     else:
         fig_mofor = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (m^3/s)'})
     fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''), hovermode='x unified',
-                            xaxis_title='Forecast Initiated on %s' % fcst_t1.strftime('%b %d, %Y'),
+                            xaxis_title=f'Forecast Initiated on {fcst_t1:%b %-d, %Y}',
                             yaxis_title='Model Estimated Flow (m<sup>3</sup>/s, <b>uncorrected</b>)')
     fig_mofor.update_traces(hovertemplate=None)
     return fig_mofor

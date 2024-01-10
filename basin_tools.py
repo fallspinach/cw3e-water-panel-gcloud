@@ -32,14 +32,14 @@ map_basin  = dl.Map([map_tiles[2], elev_bands],
 base_url = ''
 def draw_precip_by_elev(staid):
     if staid in fnf_stations:
-        fcsv = base_url + 'data/climatology/precip_by_elev/%s.csv' % (staid)
+        fcsv = f'{base_url}data/climatology/precip_by_elev/{staid}.csv'
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date')
         linecolors = {'%d-%d' % (i*1000, i*1000+999): elev_scale[i] for i in range(16)}
         fig_precip_by_elev = px.line(df, labels={'Date': 'Date', 'value': 'Precipitation Depth (mm)'}, color_discrete_map=linecolors, markers=False)
     else:
         fig_precip_by_elev = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Precipitation Depth (mm)'})
     fig_precip_by_elev.update_traces(hovertemplate=None)
-    fig_precip_by_elev.update_layout(title='Historical Mean Precip until Jul 31, %s: %s' % (staid, fnf_id_names[staid]),
+    fig_precip_by_elev.update_layout(title=f'Historical Mean Precip until Jul 31, {staid}: {fnf_id_names[staid]}',
                                      margin=dict(l=15, r=15, t=35, b=5), plot_bgcolor='#eeeeee', title_font_size=15,
                                      legend=dict(yanchor='top', y=0.99, xanchor='right', x=0.99, title='Elev bands (ft)'),
                                      hovermode='x unified')
