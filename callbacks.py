@@ -91,8 +91,9 @@ app.clientside_callback(
               Output('popup-plots', 'is_open'),
               Output('popup-plots', 'title'),
               Input('b120-points', 'click_feature'),
-              Input('slider_updates', 'value'))
-def update_flows(fcst_point, yday_update):
+              Input('slider_updates', 'value'),
+              Input('radio_pp', 'value'))
+def update_flows(fcst_point, yday_update, pp):
     if fcst_point==None:
         staid = 'FTO'
         stain = 'FTO: Feather River at Oroville'
@@ -100,12 +101,16 @@ def update_flows(fcst_point, yday_update):
         staid = fcst_point['properties']['Station_ID']
         stain = fcst_point['properties']['tooltip']
     fcst_update = datetime(fcst_t1.year, 1, 1) + timedelta(days=yday_update-1)
-    fig_reana = draw_reana(staid)
-    fig_mofor = draw_mofor(staid, fcst_update)
-    if staid!='TNL':
-        table_fcst = draw_table(staid, all_stations[staid], fcst_update)
+    if pp=='cdf':
+        fcst_type = 'esp_wwrf'
     else:
-        table_fcst = draw_table_all(fcst_update)
+        fcst_type = 'esp_wwrf_lstm'
+    fig_reana = draw_reana(staid)
+    fig_mofor = draw_mofor(staid, fcst_type, fcst_update)
+    if staid!='TNL':
+        table_fcst = draw_table(staid, all_stations[staid], fcst_type, fcst_update)
+    else:
+        table_fcst = draw_table_all(fcst_type, fcst_update)
     
     return [fig_reana, fig_mofor, table_fcst, True, stain]
 

@@ -19,14 +19,17 @@ from config import fnf_stations, fnf_id_names, df_system_status, graph_config
 #fcst_t2  = date(2023, 9, 30)
 fcst_t1 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][0]).date()
 fcst_t2 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][1]).date()
-#fcst_type = 'fusion'
-fcst_type = 'esp_wwrf'
+fcst_type0 = 'esp_wwrf_lstm'
+staid0     = 'FTO'
+staname0   = 'Feather River at Oroville'
 
 # find all forecasts in the current year
 tup1 = datetime(fcst_t1.year, 1, 1)
 tup2 = datetime(fcst_t1.year, 7, 31)
-dt_updates = [datetime.strptime(os.path.basename(d).split('_')[-1], 'update%Y%m%d') for d in glob(f'data/forecast/{fcst_type}_init{fcst_t1.year}*_update*')]
+dt_updates = [datetime.strptime(os.path.basename(d).split('_')[-1], 'update%Y%m%d') for d in glob(f'data/forecast/{fcst_type0}_init{fcst_t1.year}*_update*')]
+dt_updates.sort()
 tup_latest = dt_updates[-1]
+#print(dt_updates)
 
 ## build time series figures
 base_url = ''
@@ -44,7 +47,7 @@ def draw_reana(staid):
     return fig_reana
     
 # flow monitor/forecast figure
-def draw_mofor(staid, fcst_update):
+def draw_mofor(staid, fcst_type, fcst_update):
     if staid in fnf_stations:
         fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', usecols = ['Date']+['Ens%02d' % (i+1) for i in range(42)]+['Avg', 'Exc50', 'Exc90', 'Exc10'])
@@ -70,7 +73,7 @@ def draw_ancil(staid):
 table_note = html.Div('  [Note] 50%, 90%, 10%: exceedance levels within the forecast ensemble. AVG: month of year average during 1979-2020. %AVG: percentage of AVG. KAF: kilo-acre-feet.', id='table-note', style={'font-size': 'small'})
 
 # forecast table
-def draw_table(staid, staname, fcst_update):
+def draw_table(staid, staname, fcst_type, fcst_update):
     cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
     if staid in fnf_stations:
         fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
@@ -107,7 +110,7 @@ def draw_table(staid, staname, fcst_update):
     return [table_fcst, table_note]
 
 # forecast tables over all FNF stations
-def draw_table_all(fcst_update):
+def draw_table_all(fcst_type, fcst_update):
     cnt = 0
     for staid,staname in fnf_id_names.items():
         cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
@@ -154,11 +157,11 @@ def draw_table_all(fcst_update):
 
 ## pop-up window and its tabs/graphs/tables
 
-fig_reana = draw_reana('FTO')
-fig_mofor = draw_mofor('FTO', tup_latest)
-fig_ancil = draw_ancil('FTO')
+fig_reana = draw_reana(staid0)
+fig_mofor = draw_mofor(staid0, fcst_type0, tup_latest)
+fig_ancil = draw_ancil(staid0)
 
-table_fcst = draw_table('FTO', 'Feather River at Oroville', tup_latest)
+table_fcst = draw_table(staid0, staname0, fcst_type0, tup_latest)
 
 graph_reana = dcc.Graph(id='graph-reana', figure=fig_reana, style={'height': '360px'}, config=graph_config)
 graph_mofor = dcc.Graph(id='graph-mofor', figure=fig_mofor, style={'height': '360px'}, config=graph_config)
@@ -184,9 +187,20 @@ slider_updates = dcc.Slider(min=tup1.timetuple().tm_yday, max=tup2.timetuple().t
 )
 
 slider_text  = html.Div('Forecast Updated on:', style={'display': 'inline-block', 'font-weight': 'bold', 'vertical-align': 'top'})
-slider_block = html.Div(slider_updates, style={'width': '85%', 'display': 'inline-block'})
+slider_block = html.Div(slider_updates, style={'width': '70%', 'display': 'inline-block'})
 
-popup_plots = dbc.Offcanvas([slider_text, slider_block, popup_tabs],
+radio_pp = dcc.RadioItems(
+   options=[
+       {'label': 'CDF Match', 'value': 'cdf'},
+       {'label': 'LSTM',      'value': 'lstm'},
+   ],
+   value='lstm', labelStyle={'padding-right': 10}, id='radio_pp'
+)
+
+radio_text  = html.Div('Post-Processing: ', style={'display': 'inline-block', 'font-weight': 'bold', 'vertical-align': 'top', 'padding-right': 10})
+radio_block = html.Div(radio_pp, style={'vertical-align': 'top', 'display': 'inline-block'})
+
+popup_plots = dbc.Offcanvas([slider_text, slider_block, radio_text, radio_block, popup_tabs],
     title='B-120 Forecast Point', placement='top', is_open=False, scrollable=True, id='popup-plots',
     style={'opacity': '0.9', 'width': '90%', 'min-width': '1000px', 'min-height': '540px', 'margin-top': '150px', 'margin-left': 'auto', 'margin-right': 'auto', 'font-size': 'smaller'}
 )
