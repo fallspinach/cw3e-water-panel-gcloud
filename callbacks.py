@@ -101,10 +101,7 @@ def update_flows(fcst_point, yday_update, pp):
         staid = fcst_point['properties']['Station_ID']
         stain = fcst_point['properties']['tooltip']
     fcst_update = datetime(fcst_t1.year, 1, 1) + timedelta(days=yday_update-1)
-    if pp=='cdf':
-        fcst_type = 'esp_wwrf'
-    else:
-        fcst_type = 'esp_wwrf_lstm'
+    fcst_type = f'esp_wwrf_{pp}'
     fig_reana = draw_reana(staid)
     fig_mofor = draw_mofor(staid, fcst_type, fcst_update)
     if staid!='TNL':

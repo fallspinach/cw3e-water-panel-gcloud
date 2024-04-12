@@ -19,14 +19,15 @@ from config import fnf_stations, fnf_id_names, df_system_status, graph_config
 #fcst_t2  = date(2023, 9, 30)
 fcst_t1 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][0]).date()
 fcst_t2 = datetime.fromisoformat(df_system_status['ESP-WWRF-CCA Forecast'][1]).date()
+#print(fcst_t1, fcst_t2)
 fcst_type0 = 'esp_wwrf_lstm'
 staid0     = 'FTO'
 staname0   = 'Feather River at Oroville'
 
 # find all forecasts in the current year
 tup1 = datetime(fcst_t1.year, 1, 1)
-tup2 = datetime(fcst_t1.year, 7, 31)
-dt_updates = [datetime.strptime(os.path.basename(d).split('_')[-1], 'update%Y%m%d') for d in glob(f'data/forecast/{fcst_type0}_init{fcst_t1.year}*_update*')]
+tup2 = datetime(fcst_t1.year, 7, 1)
+dt_updates = [datetime.strptime(os.path.basename(d).split('_')[-1], 'update%Y%m%d') for d in glob(f'data/forecast/{fcst_type0}_update{fcst_t1:%Y}*')]
 dt_updates.sort()
 tup_latest = dt_updates[-1]
 #print(dt_updates)
@@ -49,7 +50,7 @@ def draw_reana(staid):
 # flow monitor/forecast figure
 def draw_mofor(staid, fcst_type, fcst_update):
     if staid in fnf_stations:
-        fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
+        fcsv = f'{base_url}data/forecast/{fcst_type}_update{fcst_update:%Y%m%d}/{staid}_{fcst_update:%Y%m}01-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', usecols = ['Date']+['Ens%02d' % (i+1) for i in range(42)]+['Avg', 'Exc50', 'Exc90', 'Exc10'])
         df.drop(index=df.index[-1], axis=0, inplace=True)
         linecolors = {'Ens%02d' % (i+1): 'lightgray' for i in range(42)}
@@ -76,7 +77,7 @@ table_note = html.Div('  [Note] 50%, 90%, 10%: exceedance levels within the fore
 def draw_table(staid, staname, fcst_type, fcst_update):
     cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
     if staid in fnf_stations:
-        fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
+        fcsv = f'{base_url}data/forecast/{fcst_type}_update{fcst_update:%Y%m%d}/{staid}_{fcst_update:%Y%m}01-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=False, usecols=cols)
         df = df[cols]
         cols.remove('Date')
@@ -114,7 +115,7 @@ def draw_table_all(fcst_type, fcst_update):
     cnt = 0
     for staid,staname in fnf_id_names.items():
         cols = ['Date', 'Exc50', 'Pav50', 'Exc90', 'Pav90', 'Exc10', 'Pav10', 'Avg']
-        fcsv = f'{base_url}data/forecast/{fcst_type}_init{fcst_t1:%Y%m%d}_update{fcst_update:%Y%m%d}/{staid}_{fcst_t1:%Y%m%d}-{fcst_t2:%Y%m%d}.csv'
+        fcsv = f'{base_url}data/forecast/{fcst_type}_update{fcst_update:%Y%m%d}/{staid}_{fcst_update:%Y%m}01-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=False, usecols=cols)
         df = df[cols]
         cols.remove('Date')
@@ -191,8 +192,8 @@ slider_block = html.Div(slider_updates, style={'width': '70%', 'display': 'inlin
 
 radio_pp = dcc.RadioItems(
    options=[
-       {'label': 'CDF Match', 'value': 'cdf'},
-       {'label': 'LSTM',      'value': 'lstm'},
+       {'label': ' CDF Match', 'value': 'cdfm'},
+       {'label': ' LSTM',      'value': 'lstm'},
    ],
    value='lstm', labelStyle={'padding-right': 10}, id='radio_pp'
 )
