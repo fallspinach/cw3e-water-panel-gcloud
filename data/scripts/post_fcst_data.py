@@ -16,7 +16,8 @@ allcols = ['Date'] + datcols + ['Basin']
 
 #print(allcols)
 
-for fcst_type in ['esp_wwrf_cdfm', 'esp_wwrf_lstm']:
+#for fcst_type in ['esp_wwrf_cdfm', 'esp_wwrf_lstm']:
+for fcst_type in ['esp_wwrf_cdfm']:
     
     fcsts = glob(f'{base_dir}/forecast/{fcst_type}_update*')
     fcsts.sort()

@@ -38,12 +38,21 @@ base_url = ''
 # flow reanalysis figure
 def draw_reana(staid):
     if staid in fnf_stations:
-        fcsv = f'{base_url}data/reanalysis/{staid}.csv'
-        df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', names=['Date', 'FNF', 'Qsim', 'QsimBC'])
+        fcsv = f'{base_url}data/retro/{staid}.csv'
+        df = pd.read_csv(fcsv, parse_dates=True, index_col='Date') #, names=['Date', 'FNF', 'Qsim', 'QsimBC'])
         fig_reana = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'})
+        fig_reana = go.Figure()
+        fig_reana.add_trace(go.Scatter(x=df.index, y=df['FNF'],    name='Full Natural Flow', mode='lines+markers', line=go.scatter.Line(color='black', dash='dot')))
+        fig_reana.add_trace(go.Scatter(x=df.index, y=df['Qsim'],   name='Model-Simulated',   mode='lines', line=go.scatter.Line(color=px.colors.qualitative.Plotly[0])))
+        fig_reana.add_trace(go.Scatter(x=df.index, y=df['QsimBC'], name='Post-Processed',    mode='lines', line=go.scatter.Line(color=px.colors.qualitative.Prism[7])))
     else:
         fig_reana = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (kaf/mon)'})
-    fig_reana.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''), hovermode='x unified') #, font=dict(size=20))
+    fig_reana.update_layout(margin=dict(l=15, r=15, t=15, b=5),
+                            plot_bgcolor='#eeeeee',
+                            legend=dict(title='', yanchor='top', y=0.99, xanchor='right', x=0.99),
+                            hovermode='x unified') #, font=dict(size=20))
+    fig_reana.update_xaxes(range=['1979-07-01', '2024-03-31'])
+    fig_reana.update_yaxes(title='Flow (kaf/mon)')
     fig_reana.update_traces(hovertemplate=None)
     return fig_reana
     
@@ -53,12 +62,24 @@ def draw_mofor(staid, fcst_type, fcst_update):
         fcsv = f'{base_url}data/forecast/{fcst_type}_update{fcst_update:%Y%m%d}/{staid}_{fcst_update:%Y%m}01-{fcst_t2:%Y%m%d}.csv'
         df = pd.read_csv(fcsv, parse_dates=True, index_col='Date', usecols = ['Date']+['Ens%02d' % (i+1) for i in range(42)]+['Avg', 'Exc50', 'Exc90', 'Exc10'])
         df.drop(index=df.index[-1], axis=0, inplace=True)
-        linecolors = {'Ens%02d' % (i+1): 'lightgray' for i in range(42)}
-        linecolors.update({'Avg': 'black', 'Exc50': 'green', 'Exc90': 'red', 'Exc10': 'blue'})
-        fig_mofor = px.line(df, labels={'Date': '', 'value': 'Flow (kaf/mon)'}, color_discrete_map=linecolors, markers=True)
+        fcsv2 = f'{base_url}data/nrt/{staid}.csv'
+        df2 = pd.read_csv(fcsv2, parse_dates=True, index_col='Date', usecols=['Date', 'FNF', 'Qsim', 'QsimBC'])
+        fig_mofor = go.Figure()
+        for e in range(1, 43):
+            fig_mofor.add_trace(go.Scatter(x=df.index, y=df[f'Ens{e:02d}'], name=f'Ens{e:02d}', mode='lines+markers', line=go.scatter.Line(color='lightgray'), showlegend=False))
+        fig_mofor.add_trace(go.Scatter(x=df.index, y=df['Avg'],   name='Historical Average', mode='lines+markers', line=go.scatter.Line(color='black', width=3, dash='dash')))
+        fig_mofor.add_trace(go.Scatter(x=df.index, y=df['Exc50'], name='50% Exceedance', mode='lines+markers', line=go.scatter.Line(color=px.colors.qualitative.Plotly[2], width=4)))
+        fig_mofor.add_trace(go.Scatter(x=df.index, y=df['Exc90'], name='90% Exceedance', mode='lines+markers', line=go.scatter.Line(color=px.colors.qualitative.Plotly[4], width=2)))
+        fig_mofor.add_trace(go.Scatter(x=df.index, y=df['Exc10'], name='10% Exceedance', mode='lines+markers', line=go.scatter.Line(color=px.colors.qualitative.Plotly[3], width=2)))
+        #linecolors = {'Ens%02d' % (i+1): 'lightgray' for i in range(42)}
+        #linecolors.update({'Avg': 'black', 'Exc50': 'green', 'Exc90': 'red', 'Exc10': 'blue'})
+        fig_mofor.add_trace(go.Scatter(x=df2.index, y=df2['FNF'], name='Full Natural Flow', mode='markers', marker=dict(symbol='square', size=12, color='black')))#, visible='legendonly'))
+        fig_mofor.add_trace(go.Scatter(x=df2.index, y=df2['Qsim'], name='Model-Simulated',   mode='lines', line=go.scatter.Line(color=px.colors.qualitative.Plotly[0])))#, visible='legendonly'))
+        fig_mofor.add_trace(go.Scatter(x=df2.index, y=df2['QsimBC'], name='Post-Processed', mode='lines', line=go.scatter.Line(color=px.colors.qualitative.Prism[7])))#, visible='legendonly'))
     else:
         fig_mofor = px.line(x=[2018, 2023], y=[0, 0], labels={'x': 'Data not available.', 'y': 'Flow (kaf/mon)'})
-    fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title=''), hovermode='x unified')
+    fig_mofor.update_layout(margin=dict(l=15, r=15, t=15, b=5), plot_bgcolor='#eeeeee', legend=dict(title='', yanchor='top', y=0.99, xanchor='right', x=0.99), hovermode='x unified')
+    fig_mofor.update_yaxes(title='Flow (kaf/mon)')
     fig_mofor.update_traces(hovertemplate=None)
     return fig_mofor
     
@@ -173,10 +194,10 @@ div_table = html.Div(id='div-table', children=table_fcst, style={'padding': '0px
 tabtitle_style          = {'padding': '2px', 'height': '28px', 'font-size': 'small'}
 tabtitle_selected_style = {'padding': '2px', 'height': '28px', 'font-size': 'small', 'font-weight': 'bold'}
 
-tab_reana = dcc.Tab(label='Reanalysis',      value='reana', children=[dcc.Loading(id='loading-reana', children=graph_reana)], style=tabtitle_style, selected_style=tabtitle_selected_style)
+tab_reana = dcc.Tab(label='Retrospective',   value='reana', children=[dcc.Loading(id='loading-reana', children=graph_reana)], style=tabtitle_style, selected_style=tabtitle_selected_style)
 tab_mofor = dcc.Tab(label='Monitor/Forecast',value='mofor', children=[dcc.Loading(id='loading-mofor', children=graph_mofor)], style=tabtitle_style, selected_style=tabtitle_selected_style)
 tab_ancil = dcc.Tab(label='Ancillary Data',  value='ancil', children=[dcc.Loading(id='loading-ancil', children=graph_ancil)], style=tabtitle_style, selected_style=tabtitle_selected_style)
-tab_table = dcc.Tab(label='Table',           value='table', children=[dcc.Loading(id='loading-table', children=div_table)],   style=tabtitle_style, selected_style=tabtitle_selected_style)
+tab_table = dcc.Tab(label='Forecast Table',  value='table', children=[dcc.Loading(id='loading-table', children=div_table)],   style=tabtitle_style, selected_style=tabtitle_selected_style)
 
 #popup_tabs = dcc.Tabs([tab_mofor, tab_table, tab_reana, tab_ancil], id='popup-tabs', value='mofor')
 popup_tabs = dcc.Tabs([tab_mofor, tab_table, tab_reana], id='popup-tabs', value='mofor')

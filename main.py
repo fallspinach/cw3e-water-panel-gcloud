@@ -38,4 +38,5 @@ app.layout = panel_layout
 from callbacks import *
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8081, debug=True)
+    #app.run_server(host='0.0.0.0', port=8081, debug=True)
+    app.run_server(host='0.0.0.0', port=43437, debug=True)
